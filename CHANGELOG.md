@@ -50,3 +50,6 @@
 
 * update implicitly_animated_reorderable_list version.
 * rename PaginationViewModel.params to PaginationViewModel.paginationParams
+## 0.1.8
+
+* update readme.md
