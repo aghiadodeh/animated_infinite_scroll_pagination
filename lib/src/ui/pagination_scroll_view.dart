@@ -1,6 +1,6 @@
 import '../models/pagination_model.dart';
 import 'pagination_loader.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide AnimatedItemBuilder;
 import 'package:flutterx_live_data/flutterx_live_data.dart';
 
 class PaginationScrollView extends StatelessWidget {

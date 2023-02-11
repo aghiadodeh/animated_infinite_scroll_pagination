@@ -12,16 +12,16 @@ class PaginationParams<T extends Object> {
   int page = 1;
 
   /// displayed items List in UI
-  final MutableLiveData<PaginationEquatable<T>> itemsList = MutableLiveData(initialValue: const PaginationEquatable());
+  final MutableLiveData<PaginationEquatable<T>> itemsList = MutableLiveData(value: const PaginationEquatable());
 
   /// check if user refresh data by `RefreshIndicator`, when true -> reset paginationParams to default value.
   bool isRefresh = false;
 
   /// is request in loading status
-  final MutableLiveData<bool> loading = MutableLiveData(initialValue: false);
+  final MutableLiveData<bool> loading = MutableLiveData(value: false);
 
   /// server error
-  final MutableLiveData<bool> error = MutableLiveData(initialValue: false);
+  final MutableLiveData<bool> error = MutableLiveData(value: false);
 
   /// detect if current page is last page -> don't load more data if lastPage is true
   bool get lastPage => total == itemsList.value.items.length && total != 0;

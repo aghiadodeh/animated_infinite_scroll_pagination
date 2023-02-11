@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide AnimatedItemBuilder;
 import '../models/pagination_model.dart';
 import '../viewmodels/pagination_viewmodel.dart';
 

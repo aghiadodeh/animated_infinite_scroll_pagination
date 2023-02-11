@@ -1,6 +1,6 @@
 name: animated_infinite_scroll_pagination
 description: Flutter package loads and displays small parts of the elements when you scroll down on the screen
-version: 0.1.8
+version: 0.2.0
 homepage: https://github.com/aghiadodeh/animated_infinite_scroll_pagination
 
 
@@ -12,8 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
   rxdart: ^0.27.3
-  flutterx_live_data: ^1.4.4
-  implicitly_animated_reorderable_list_2: ^0.4.2
+  flutterx_live_data: ^1.8.0
+  implicitly_animated_reorderable_list_2: ^0.5.0
 
 dev_dependencies:
   flutter_test:

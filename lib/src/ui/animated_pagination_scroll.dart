@@ -4,7 +4,7 @@ import 'package:animated_infinite_scroll_pagination/src/ui/pagination_error.dart
 import '../models/pagination_model.dart';
 import 'pagination_scroll_view.dart';
 import '../viewmodels/pagination_viewmodel.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide AnimatedItemBuilder;
 import 'package:flutterx_live_data/flutterx_live_data.dart';
 import 'pagination_loader.dart';
 

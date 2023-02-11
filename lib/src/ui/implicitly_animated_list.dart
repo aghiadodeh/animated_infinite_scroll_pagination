@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide AnimatedItemBuilder;
 import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reorderable_list_2.dart';
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
-
 import '../models/pagination_model.dart';
 import '../viewmodels/pagination_viewmodel.dart';
 

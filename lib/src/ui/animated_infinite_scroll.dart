@@ -1,6 +1,6 @@
 import '../../animated_infinite_scroll_pagination.dart';
 import 'animated_pagination_scroll.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide AnimatedItemBuilder;
 
 class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   /// class extends [PaginationViewModel].

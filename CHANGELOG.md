@@ -53,3 +53,10 @@
 ## 0.1.8
 
 * update readme.md
+## 0.1.9
+
+* update flutterx_live_data package version
+## 0.2.0
+
+* update implicitly_animated_reorderable_list package version
+

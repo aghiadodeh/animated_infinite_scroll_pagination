@@ -1,6 +1,6 @@
 import '../models/pagination_model.dart';
 import 'dart:io' show Platform;
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide AnimatedItemBuilder;
 import 'package:flutter/cupertino.dart';
 import 'package:flutterx_live_data/flutterx_live_data.dart';
 
