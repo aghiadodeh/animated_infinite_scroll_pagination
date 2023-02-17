@@ -11,7 +11,7 @@ import 'pagination_loader.dart';
 class AnimatedPaginationScrollView<T extends Object> extends StatelessWidget {
   final PaginationViewModel<T> viewModel;
   final ScrollPhysics? physics;
-  final Widget Function(T) itemBuilder;
+  final Widget Function(int index, T item) itemBuilder;
   final Widget? topWidget;
   final Widget? loadingWidget;
   final Widget? errorWidget;

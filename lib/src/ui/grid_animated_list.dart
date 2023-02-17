@@ -5,7 +5,7 @@ import '../viewmodels/pagination_viewmodel.dart';
 class AnimatedGridList<T extends Object> extends StatelessWidget {
   final PaginationEquatable<T> list;
   final PaginationViewModel<T> viewModel;
-  final Widget Function(T) itemBuilder;
+  final Widget Function(int index, T item) itemBuilder;
   final Axis scrollDirection;
   final SliverGridDelegate gridDelegate;
   const AnimatedGridList({
@@ -26,7 +26,7 @@ class AnimatedGridList<T extends Object> extends StatelessWidget {
       itemCount: list.items.length,
       scrollDirection: scrollDirection,
       itemBuilder: (context, index) {
-        return itemBuilder.call(list.items[index].item);
+        return itemBuilder.call(index, list.items[index].item);
       },
     );
   }

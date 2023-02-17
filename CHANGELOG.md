@@ -59,4 +59,7 @@
 ## 0.2.0
 
 * update implicitly_animated_reorderable_list package version
+## 0.2.1
+
+* add index to itemBuilder
 

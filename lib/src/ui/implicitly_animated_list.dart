@@ -7,7 +7,7 @@ import '../viewmodels/pagination_viewmodel.dart';
 class AppImplicitlyAnimatedList<T extends Object> extends StatelessWidget {
   final PaginationEquatable<T> list;
   final PaginationViewModel<T> viewModel;
-  final Widget Function(T) itemBuilder;
+  final Widget Function(int index, T item) itemBuilder;
   final Axis scrollDirection;
   const AppImplicitlyAnimatedList({
     required this.list,
@@ -31,13 +31,14 @@ class AppImplicitlyAnimatedList<T extends Object> extends StatelessWidget {
         itemBuilder: (context, animation, item, i) {
           return SizeFadeTransition(
             animation: animation,
-            child: itemBuilder.call(item.item),
+            child: itemBuilder.call(i, item.item),
           );
         },
         updateItemBuilder: (context, animation, item) {
+          final index = list.items.indexOf(item);
           return FadeTransition(
             opacity: animation,
-            child: itemBuilder.call(item.item),
+            child: itemBuilder.call(index, item.item),
           );
         },
       ),

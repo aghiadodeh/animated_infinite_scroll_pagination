@@ -10,7 +10,7 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   final ScrollPhysics? physics;
 
   /// builder of each item in list.
-  final Widget Function(T) itemBuilder;
+  final Widget Function(int index, T item) itemBuilder;
 
   /// pass [topWidget] when you want to place a widget at the top of the first [itemBuilder] widget.
   final Widget? topWidget;

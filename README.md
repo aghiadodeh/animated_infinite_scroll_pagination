@@ -124,7 +124,7 @@ Widget build(BuildContext context) {
       loadingWidget: const AppProgressBar(), // customize your loading widget
       footerLoadingWidget: const AppProgressBar(), // customize your pagination loading widget
       errorWidget: const Text("Pagination Error"), // customize your error widget
-      itemBuilder: (item) => UserCard(user: item, onDelete: deleteUser),
+      itemBuilder: (index, item) => UserCard(user: item, onDelete: deleteUser),
       refreshIndicator: true,
       onRefresh: () {
         // handle swipe refresh event

@@ -51,7 +51,7 @@ class _UsersListViewState extends State<UsersListView> {
       // customize your pagination loading widget
       errorWidget: const Text("Pagination Error"),
       // customize your error widget
-      itemBuilder: (item) => UserCard(user: item, onDelete: deleteUser),
+      itemBuilder: (index, item) => UserCard(user: item, onDelete: deleteUser),
       refreshIndicator: true,
     );
   }
