@@ -76,56 +76,56 @@ class User {
     height = json['height'];
     weight = json['weight'];
     eyeColor = json['eyeColor'];
-    hair = json['hair'] != null ? new Hair.fromJson(json['hair']) : null;
+    hair = json['hair'] != null ? Hair.fromJson(json['hair']) : null;
     domain = json['domain'];
     ip = json['ip'];
-    address = json['address'] != null ? new Address.fromJson(json['address']) : null;
+    address = json['address'] != null ? Address.fromJson(json['address']) : null;
     macAddress = json['macAddress'];
     university = json['university'];
-    bank = json['bank'] != null ? new Bank.fromJson(json['bank']) : null;
-    company = json['company'] != null ? new Company.fromJson(json['company']) : null;
+    bank = json['bank'] != null ? Bank.fromJson(json['bank']) : null;
+    company = json['company'] != null ? Company.fromJson(json['company']) : null;
     ein = json['ein'];
     ssn = json['ssn'];
     userAgent = json['userAgent'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['maidenName'] = this.maidenName;
-    data['age'] = this.age;
-    data['gender'] = this.gender;
-    data['email'] = this.email;
-    data['phone'] = this.phone;
-    data['username'] = this.username;
-    data['password'] = this.password;
-    data['birthDate'] = this.birthDate;
-    data['image'] = this.image;
-    data['bloodGroup'] = this.bloodGroup;
-    data['height'] = this.height;
-    data['weight'] = this.weight;
-    data['eyeColor'] = this.eyeColor;
-    if (this.hair != null) {
-      data['hair'] = this.hair!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['maidenName'] = maidenName;
+    data['age'] = age;
+    data['gender'] = gender;
+    data['email'] = email;
+    data['phone'] = phone;
+    data['username'] = username;
+    data['password'] = password;
+    data['birthDate'] = birthDate;
+    data['image'] = image;
+    data['bloodGroup'] = bloodGroup;
+    data['height'] = height;
+    data['weight'] = weight;
+    data['eyeColor'] = eyeColor;
+    if (hair != null) {
+      data['hair'] = hair!.toJson();
     }
-    data['domain'] = this.domain;
-    data['ip'] = this.ip;
-    if (this.address != null) {
-      data['address'] = this.address!.toJson();
+    data['domain'] = domain;
+    data['ip'] = ip;
+    if (address != null) {
+      data['address'] = address!.toJson();
     }
-    data['macAddress'] = this.macAddress;
-    data['university'] = this.university;
-    if (this.bank != null) {
-      data['bank'] = this.bank!.toJson();
+    data['macAddress'] = macAddress;
+    data['university'] = university;
+    if (bank != null) {
+      data['bank'] = bank!.toJson();
     }
-    if (this.company != null) {
-      data['company'] = this.company!.toJson();
+    if (company != null) {
+      data['company'] = company!.toJson();
     }
-    data['ein'] = this.ein;
-    data['ssn'] = this.ssn;
-    data['userAgent'] = this.userAgent;
+    data['ein'] = ein;
+    data['ssn'] = ssn;
+    data['userAgent'] = userAgent;
     return data;
   }
 }
@@ -142,9 +142,9 @@ class Hair {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['color'] = this.color;
-    data['type'] = this.type;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['color'] = color;
+    data['type'] = type;
     return data;
   }
 }
@@ -161,20 +161,20 @@ class Address {
   Address.fromJson(Map<String, dynamic> json) {
     address = json['address'];
     city = json['city'];
-    coordinates = json['coordinates'] != null ? new Coordinates.fromJson(json['coordinates']) : null;
+    coordinates = json['coordinates'] != null ? Coordinates.fromJson(json['coordinates']) : null;
     postalCode = json['postalCode'];
     state = json['state'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['address'] = this.address;
-    data['city'] = this.city;
-    if (this.coordinates != null) {
-      data['coordinates'] = this.coordinates!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['address'] = address;
+    data['city'] = city;
+    if (coordinates != null) {
+      data['coordinates'] = coordinates!.toJson();
     }
-    data['postalCode'] = this.postalCode;
-    data['state'] = this.state;
+    data['postalCode'] = postalCode;
+    data['state'] = state;
     return data;
   }
 }
@@ -191,9 +191,9 @@ class Coordinates {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['lat'] = this.lat;
-    data['lng'] = this.lng;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['lat'] = lat;
+    data['lng'] = lng;
     return data;
   }
 }
@@ -216,12 +216,12 @@ class Bank {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['cardExpire'] = this.cardExpire;
-    data['cardNumber'] = this.cardNumber;
-    data['cardType'] = this.cardType;
-    data['currency'] = this.currency;
-    data['iban'] = this.iban;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['cardExpire'] = cardExpire;
+    data['cardNumber'] = cardNumber;
+    data['cardType'] = cardType;
+    data['currency'] = currency;
+    data['iban'] = iban;
     return data;
   }
 }
@@ -235,20 +235,20 @@ class Company {
   Company({this.address, this.department, this.name, this.title});
 
   Company.fromJson(Map<String, dynamic> json) {
-    address = json['address'] != null ? new Address.fromJson(json['address']) : null;
+    address = json['address'] != null ? Address.fromJson(json['address']) : null;
     department = json['department'];
     name = json['name'];
     title = json['title'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.address != null) {
-      data['address'] = this.address!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (address != null) {
+      data['address'] = address!.toJson();
     }
-    data['department'] = this.department;
-    data['name'] = this.name;
-    data['title'] = this.title;
+    data['department'] = department;
+    data['name'] = name;
+    data['title'] = title;
     return data;
   }
 }

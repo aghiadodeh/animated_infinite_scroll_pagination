@@ -1,6 +1,7 @@
-import '../../animated_infinite_scroll_pagination.dart';
-import 'animated_pagination_scroll.dart';
-import 'package:flutter/material.dart' hide AnimatedItemBuilder;
+import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
+import 'package:animated_infinite_scroll_pagination/src/configuration/configuration.dart';
+import 'package:flutter/material.dart';
+import 'animated_pagination_scrollview.dart';
 
 class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   /// class extends [PaginationViewModel].
@@ -41,7 +42,7 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   final SliverGridDelegate? gridDelegate;
 
   /// Custom [Widget] inside [AnimatedPaginationScrollView]
-  final Widget Function(PaginationEquatable<T>)? child;
+  final Widget Function(List<PaginationModel<T>>)? child;
 
   const AnimatedInfiniteScrollView({
     required this.viewModel,
@@ -67,28 +68,26 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
 class _AnimatedInfiniteScrollViewState<T extends Object> extends State<AnimatedInfiniteScrollView<T>> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
+  AnimatedPaginationConfiguration<T> get configuration => AnimatedPaginationConfiguration(
+        viewModel: widget.viewModel,
+        itemBuilder: widget.itemBuilder,
+        child: widget.child,
+        errorWidget: widget.errorWidget,
+        footerLoadingWidget: widget.footerLoadingWidget,
+        gridDelegate: widget.gridDelegate,
+        loadingWidget: widget.loadingWidget,
+        noItemsWidget: widget.noItemsWidget,
+        physics: widget.physics,
+        scrollDirection: widget.scrollDirection,
+        topWidget: widget.topWidget,
+      );
+
   Future<void> _onRefresh() async {
     _refreshIndicatorKey.currentState?.show();
     widget.onRefresh?.call();
     widget.viewModel.refresh();
     await widget.viewModel.getPaginationList();
     return Future.value();
-  }
-
-  Widget _buildScrollView() {
-    return AnimatedPaginationScrollView(
-      viewModel: widget.viewModel,
-      itemBuilder: widget.itemBuilder,
-      physics: widget.physics,
-      loadingWidget: widget.loadingWidget,
-      errorWidget: widget.errorWidget,
-      topWidget: widget.topWidget,
-      footerLoadingWidget: widget.footerLoadingWidget,
-      gridDelegate: widget.gridDelegate,
-      scrollDirection: widget.scrollDirection,
-      noItemsWidget: widget.noItemsWidget,
-      child: widget.child,
-    );
   }
 
   @override
@@ -108,10 +107,10 @@ class _AnimatedInfiniteScrollViewState<T extends Object> extends State<AnimatedI
       child: widget.refreshIndicator
           ? RefreshIndicator(
               key: _refreshIndicatorKey,
-              child: _buildScrollView(),
+              child: AnimatedPaginationScrollView(configuration),
               onRefresh: _onRefresh,
             )
-          : _buildScrollView(),
+          : AnimatedPaginationScrollView(configuration),
     );
   }
 }

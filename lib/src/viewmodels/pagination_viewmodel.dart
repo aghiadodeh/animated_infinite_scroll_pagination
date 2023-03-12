@@ -1,8 +1,7 @@
 import 'dart:async';
-import '../models/pagination_model.dart';
-import '../models/response_state.dart';
+import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
 
-abstract class PaginationViewModel<T extends Object> {
+mixin PaginationViewModel<T extends Object> {
   PaginationParams<T> paginationParams = PaginationParams<T>();
 
   Stream<PaginationState<List<T>>> get state => streamSubscription();
@@ -40,15 +39,15 @@ abstract class PaginationViewModel<T extends Object> {
     paginationParams.handleRefresh();
 
     // remove cached data when remote data is exists
-    final items = paginationParams.itemsList.value.items.toList();
+    final items = paginationParams.itemsList.value.toList();
     items.removeWhere((element) => element.page == paginationParams.page);
 
     // mapping list
-    List<PaginationModel<T>> list = data.map((e) => PaginationModel(item: e, page: paginationParams.page)).toList();
+    List<PaginationModel<T>> list = data.map((e) => PaginationModel(id: randomString(), item: e, page: paginationParams.page)).toList();
 
     // update new list
     final newList = items.isNotEmpty ? (items + list).toList() : list;
-    paginationParams.itemsList.postValue(PaginationEquatable<T>(items: newList));
+    paginationParams.itemsList.postValue(newList);
 
     if (!paginationParams.isCached) incrementPage();
     paginationParams.setLoading(false);
@@ -57,9 +56,9 @@ abstract class PaginationViewModel<T extends Object> {
 
   /// push new items to start of items-list
   void appendAtFirst(List<T> data) {
-    final items = paginationParams.itemsList.value.items.toList();
-    items.insertAll(0, data.map((e) => PaginationModel(item: e, page: 1)));
-    paginationParams.itemsList.postValue(PaginationEquatable(items: items));
+    final items = paginationParams.itemsList.value.toList();
+    items.insertAll(0, data.map((e) => PaginationModel(id: randomString(), item: e, page: 1)));
+    paginationParams.itemsList.postValue(items);
   }
 
   /// increment pagination current page
@@ -74,21 +73,21 @@ abstract class PaginationViewModel<T extends Object> {
 
   /// remove item from list
   void deleteItem(int index) {
-    final items = paginationParams.itemsList.value.items.toList();
+    final items = paginationParams.itemsList.value.toList();
     items.removeAt(index);
-    paginationParams.itemsList.postValue(PaginationEquatable(items: items));
+    paginationParams.itemsList.postValue(items);
   }
 
   // insert new item to list
   void insertItem(int index, T item, int page) {
-    final items = paginationParams.itemsList.value.items.toList();
-    items.insert(index, PaginationModel(item: item, page: page));
-    paginationParams.itemsList.postValue(PaginationEquatable(items: items));
+    final items = paginationParams.itemsList.value.toList();
+    items.insert(index, PaginationModel(id: randomString(), item: item, page: page));
+    paginationParams.itemsList.postValue(items);
   }
 
   /// empty list
   void clear() {
-    paginationParams.itemsList.postValue(const PaginationEquatable(items: []));
+    paginationParams.itemsList.postValue([]);
     setTotal(0);
   }
 

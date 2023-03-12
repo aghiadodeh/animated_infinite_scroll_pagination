@@ -1,15 +1,19 @@
 import 'package:example/models/user.dart';
 import 'package:flutter/material.dart';
 
-class UserCard extends StatelessWidget {
+class UserCard extends StatefulWidget {
   final User user;
   final Function(User) onDelete;
 
   const UserCard({required this.user, required this.onDelete, Key? key}) : super(key: key);
 
   @override
+  State<UserCard> createState() => _UserCardState();
+}
+
+class _UserCardState extends State<UserCard> {
+  @override
   Widget build(BuildContext context) {
-    print("object: ${user.name}");
     return SizedBox(
       width: double.infinity,
       child: Card(
@@ -28,21 +32,21 @@ class UserCard extends StatelessWidget {
                     child: Icon(Icons.delete, size: 28, color: Colors.grey),
                   ),
                   onTap: () {
-                    onDelete.call(user);
+                    widget.onDelete.call(widget.user);
                   },
                 ),
               ),
               Row(
                 children: [
                   Image.network(
-                    user.image!,
+                    widget.user.image!,
                     fit: BoxFit.cover,
                     width: 50,
                     height: 50,
                   ),
                   const SizedBox(width: 20),
                   Text(
-                    (user.id?.toString() ?? "-") + ". " + (user.name ?? "-"),
+                    (widget.user.id?.toString() ?? "-") + ". " + (widget.user.name ?? "-"),
                     style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
                   ),
                 ],
@@ -52,7 +56,7 @@ class UserCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(user.company?.title ?? "-"),
+                  Text(widget.user.company?.title ?? "-"),
                   const SizedBox(height: 10),
                 ],
               )

@@ -5,7 +5,7 @@ import 'package:example/models/user.dart';
 import 'package:example/repositories/user_repository.dart';
 import 'package:flutter/foundation.dart';
 
-class UsersViewModel extends PaginationViewModel<User> {
+class UsersViewModel with PaginationViewModel<User> {
   final repository = UserRepository();
   final _controller = StreamController<PaginationState<List<User>>>();
 
@@ -50,7 +50,7 @@ class UsersViewModel extends PaginationViewModel<User> {
   void remove(User user) {
     // `paginationParams` is a variable declared in `PaginationViewModel`
     // which contains the List<T>
-    final index = paginationParams.itemsList.value.items.indexWhere((element) => element.item.id == user.id);
+    final index = paginationParams.itemsList.value.indexWhere((element) => element.item.id == user.id);
     // `deleteItem` is a method declared in `PaginationViewModel`
     // which expected a integer value `index of item`
     if (index != -1) deleteItem(index);

@@ -62,4 +62,7 @@
 ## 0.2.1
 
 * add index to itemBuilder
+## 0.2.2
+
+* improvments
 
