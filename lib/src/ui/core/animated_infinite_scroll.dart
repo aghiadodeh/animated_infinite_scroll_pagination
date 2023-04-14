@@ -44,6 +44,9 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   /// Custom [Widget] inside [AnimatedPaginationScrollView]
   final Widget Function(List<PaginationModel<T>>)? child;
 
+  /// scroll-view padding
+  final EdgeInsets? padding;
+
   const AnimatedInfiniteScrollView({
     required this.viewModel,
     required this.itemBuilder,
@@ -58,6 +61,7 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.gridDelegate,
     this.child,
+    this.padding,
     Key? key,
   }) : super(key: key);
 
@@ -80,6 +84,7 @@ class _AnimatedInfiniteScrollViewState<T extends Object> extends State<AnimatedI
         physics: widget.physics,
         scrollDirection: widget.scrollDirection,
         topWidget: widget.topWidget,
+        padding: widget.padding,
       );
 
   Future<void> _onRefresh() async {

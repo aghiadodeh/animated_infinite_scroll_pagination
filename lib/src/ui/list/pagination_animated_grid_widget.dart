@@ -22,6 +22,7 @@ class _PaginationAnimatedGridWidgetState<T extends Object> extends State<Paginat
       builder: (context, list) => GridView.builder(
         gridDelegate: widget.configuration.gridDelegate!,
         shrinkWrap: true,
+        padding: widget.configuration.padding,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: list.length,
         scrollDirection: widget.configuration.scrollDirection,

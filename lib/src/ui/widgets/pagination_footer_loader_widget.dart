@@ -20,7 +20,7 @@ class PaginationFooterLoaderWidget<T extends Object> extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(12),
             child: Center(
-              child: configuration.loadingWidget ?? const AppProgressBar(),
+              child: configuration.footerLoadingWidget ?? const AppProgressBar(),
             ),
           );
         } else {

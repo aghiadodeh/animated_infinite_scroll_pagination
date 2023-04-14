@@ -13,6 +13,7 @@ class AnimatedPaginationConfiguration<T extends Object> {
   final Axis scrollDirection;
   final SliverGridDelegate? gridDelegate;
   final Widget Function(List<PaginationModel<T>>)? child;
+  final EdgeInsets? padding;
 
   const AnimatedPaginationConfiguration({
     required this.viewModel,
@@ -26,5 +27,6 @@ class AnimatedPaginationConfiguration<T extends Object> {
     required this.gridDelegate,
     required this.noItemsWidget,
     required this.child,
+    required this.padding,
   });
 }

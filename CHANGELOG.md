@@ -65,4 +65,10 @@
 ## 0.2.2
 
 * improvments
+## 0.2.3
+
+* fix footer loader widget
+## 0.2.4
+
+* add padding to scrollView
 
