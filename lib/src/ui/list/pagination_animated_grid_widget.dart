@@ -20,6 +20,7 @@ class _PaginationAnimatedGridWidgetState<T extends Object> extends State<Paginat
     return LiveDataBuilder<List<PaginationModel<T>>>(
       data: viewModel.paginationParams.itemsList,
       builder: (context, list) => GridView.builder(
+        key: const Key("itemsList"),
         gridDelegate: widget.configuration.gridDelegate!,
         shrinkWrap: true,
         padding: widget.configuration.padding,
@@ -27,7 +28,7 @@ class _PaginationAnimatedGridWidgetState<T extends Object> extends State<Paginat
         itemCount: list.length,
         scrollDirection: widget.configuration.scrollDirection,
         itemBuilder: (context, index) {
-          return widget.configuration.itemBuilder.call(index, list[index].item);
+          return widget.configuration.itemBuilder?.call(index, list[index].item);
         },
       ),
     );

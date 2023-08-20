@@ -30,6 +30,8 @@ class PaginationParams<T extends Object> {
   /// detect if current page is last page -> don't load more data if lastPage is true
   bool get lastPage => total == itemsList.value.length && total != 0;
 
+  bool idle = true;
+
   /// set loading value, with hide error
   void setLoading(bool loading) {
     error.postValue(false);
@@ -55,14 +57,16 @@ class PaginationParams<T extends Object> {
   void handleRefresh() {
     if (isRefresh) {
       isRefresh = false;
-      itemsList.value = [];
+      if (itemsList.value.isNotEmpty) {
+        itemsList.postValue(List<PaginationModel<T>>.empty(growable: true));
+      }
     }
   }
 
   /// check items after fetched
   void checkFetchedData() {
     final items = itemsList.value.toList();
-    noItemsFound.postValue(items.isEmpty && !loading.value && total == 0);
+    noItemsFound.postValue(items.isEmpty && !loading.value && total == 0 && !idle);
   }
 
   PaginationParams() {

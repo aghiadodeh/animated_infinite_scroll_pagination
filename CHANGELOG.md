@@ -71,4 +71,15 @@
 ## 0.2.4
 
 * add padding to scrollView
+## 0.2.5
 
+* fix clear data
+## 0.2.6
+
+* fix cache list items on clear
+
+## 0.2.7
+* whether to spawn a new isolate on which to calculate the diff on
+
+## 0.2.8
+* fix display no items widget

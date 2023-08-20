@@ -11,7 +11,7 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   final ScrollPhysics? physics;
 
   /// builder of each item in list.
-  final Widget Function(int index, T item) itemBuilder;
+  final Widget Function(int index, T item)? itemBuilder;
 
   /// pass [topWidget] when you want to place a widget at the top of the first [itemBuilder] widget.
   final Widget? topWidget;
@@ -47,9 +47,16 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   /// scroll-view padding
   final EdgeInsets? padding;
 
+  /// Whether to spawn a new isolate on which to calculate the diff on.
+  ///
+  /// Usually you wont have to specify this value as the MyersDiff implementation will
+  /// use its own metrics to decide, whether a new isolate has to be spawned or not for
+  /// optimal performance.
+  final bool? spawnIsolate;
+
   const AnimatedInfiniteScrollView({
     required this.viewModel,
-    required this.itemBuilder,
+    this.itemBuilder,
     this.topWidget,
     this.footerLoadingWidget,
     this.loadingWidget,
@@ -62,6 +69,7 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
     this.gridDelegate,
     this.child,
     this.padding,
+    this.spawnIsolate,
     Key? key,
   }) : super(key: key);
 
@@ -85,6 +93,7 @@ class _AnimatedInfiniteScrollViewState<T extends Object> extends State<AnimatedI
         scrollDirection: widget.scrollDirection,
         topWidget: widget.topWidget,
         padding: widget.padding,
+        spawnIsolate: widget.spawnIsolate,
       );
 
   Future<void> _onRefresh() async {

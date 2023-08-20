@@ -11,12 +11,11 @@ class PaginationFooterLoaderWidget<T extends Object> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CombinedLiveDataBuilder.with2<bool, List<PaginationModel>, bool>(
+    return MultipleLiveDataBuilder.with2<bool, List<PaginationModel>>(
       x1: configuration.viewModel.paginationParams.loading,
       x2: configuration.viewModel.paginationParams.itemsList,
-      transform: (x1, x2) => x1 && x2.isNotEmpty,
-      builder: (context, value) {
-        if (value) {
+      builder: (context, loading, itemsList) {
+        if (loading && itemsList.isNotEmpty) {
           return Padding(
             padding: const EdgeInsets.all(12),
             child: Center(
@@ -24,7 +23,7 @@ class PaginationFooterLoaderWidget<T extends Object> extends StatelessWidget {
             ),
           );
         } else {
-          final size = configuration.viewModel.paginationParams.lastPage ? 0.0 : 70.0;
+          final size = configuration.viewModel.paginationParams.lastPage || itemsList.isEmpty ? 0.0 : 70.0;
           return SizedBox(height: size);
         }
       },

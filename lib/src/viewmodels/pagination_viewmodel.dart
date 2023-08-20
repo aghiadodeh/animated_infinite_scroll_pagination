@@ -11,6 +11,7 @@ mixin PaginationViewModel<T extends Object> {
   void listen() {
     _streamSubscription = state.listen((event) {
       if (event is PaginationSuccess) {
+        paginationParams.idle = false;
         final response = (event as PaginationSuccess);
         if (response.data is List<T>) {
           paginationParams.isCached = response.cached;
@@ -78,7 +79,7 @@ mixin PaginationViewModel<T extends Object> {
     paginationParams.itemsList.postValue(items);
   }
 
-  // insert new item to list
+  /// insert new item to list
   void insertItem(int index, T item, int page) {
     final items = paginationParams.itemsList.value.toList();
     items.insert(index, PaginationModel(id: randomString(), item: item, page: page));
@@ -87,7 +88,7 @@ mixin PaginationViewModel<T extends Object> {
 
   /// empty list
   void clear() {
-    paginationParams.itemsList.postValue([]);
+    paginationParams.itemsList.postValue(List<PaginationModel<T>>.empty(growable: true));
     setTotal(0);
   }
 

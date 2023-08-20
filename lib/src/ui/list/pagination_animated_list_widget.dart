@@ -20,26 +20,29 @@ class _PaginationAnimatedListWidgetState<T extends Object> extends State<Paginat
   Widget build(BuildContext context) {
     return LiveDataBuilder<List<PaginationModel<T>>>(
       data: viewModel.paginationParams.itemsList,
-      builder: (context, list) => ImplicitlyAnimatedList<PaginationModel<T>>(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        items: list,
-        padding: widget.configuration.padding,
-        scrollDirection: widget.configuration.scrollDirection,
-        areItemsTheSame: (a, b) => widget.configuration.viewModel.areItemsTheSame(a.item, b.item),
-        itemBuilder: (context, animation, item, i) => SizeFadeTransition(
-          key: ObjectKey(item),
-          animation: animation,
-          child: widget.configuration.itemBuilder.call(i, item.item),
-        ),
-        updateItemBuilder: (context, animation, item) {
-          final index = list.indexOf(item);
-          return FadeTransition(
-            opacity: animation,
-            child: widget.configuration.itemBuilder.call(index, item.item),
-          );
-        },
-      ),
+      builder: (context, list) => list.isEmpty
+          ? const SizedBox()
+          : ImplicitlyAnimatedList<PaginationModel<T>>(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              spawnIsolate: widget.configuration.spawnIsolate,
+              items: list,
+              padding: widget.configuration.padding,
+              scrollDirection: widget.configuration.scrollDirection,
+              areItemsTheSame: (a, b) => widget.configuration.viewModel.areItemsTheSame(a.item, b.item),
+              itemBuilder: (context, animation, item, i) => SizeFadeTransition(
+                key: ObjectKey(item),
+                animation: animation,
+                child: widget.configuration.itemBuilder?.call(i, item.item),
+              ),
+              updateItemBuilder: (context, animation, item) {
+                final index = list.indexOf(item);
+                return FadeTransition(
+                  opacity: animation,
+                  child: widget.configuration.itemBuilder?.call(index, item.item),
+                );
+              },
+            ),
     );
   }
 }
