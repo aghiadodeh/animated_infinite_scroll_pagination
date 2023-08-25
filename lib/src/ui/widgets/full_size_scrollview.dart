@@ -18,6 +18,7 @@ class FullSizeScrollView<T extends Object> extends StatelessWidget {
         return SingleChildScrollView(
           physics: configuration.physics ?? const AlwaysScrollableScrollPhysics(),
           scrollDirection: configuration.scrollDirection,
+          padding: configuration.padding,
           child: ConstrainedBox(
             // expand child
             constraints: BoxConstraints(

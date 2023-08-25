@@ -27,7 +27,6 @@ class _PaginationAnimatedListWidgetState<T extends Object> extends State<Paginat
               physics: const NeverScrollableScrollPhysics(),
               spawnIsolate: widget.configuration.spawnIsolate,
               items: list,
-              padding: widget.configuration.padding,
               scrollDirection: widget.configuration.scrollDirection,
               areItemsTheSame: (a, b) => widget.configuration.viewModel.areItemsTheSame(a.item, b.item),
               itemBuilder: (context, animation, item, i) => SizeFadeTransition(

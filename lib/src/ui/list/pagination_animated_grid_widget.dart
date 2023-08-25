@@ -23,7 +23,6 @@ class _PaginationAnimatedGridWidgetState<T extends Object> extends State<Paginat
         key: const Key("itemsList"),
         gridDelegate: widget.configuration.gridDelegate!,
         shrinkWrap: true,
-        padding: widget.configuration.padding,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: list.length,
         scrollDirection: widget.configuration.scrollDirection,

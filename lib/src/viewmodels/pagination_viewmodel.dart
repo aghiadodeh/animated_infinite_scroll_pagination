@@ -11,13 +11,14 @@ mixin PaginationViewModel<T extends Object> {
   void listen() {
     _streamSubscription = state.listen((event) {
       if (event is PaginationSuccess) {
-        paginationParams.idle = false;
+        paginationParams.idle.postValue(false);
         final response = (event as PaginationSuccess);
         if (response.data is List<T>) {
           paginationParams.isCached = response.cached;
           _appendData(response.data);
         }
       } else if (event is PaginationError) {
+        paginationParams.idle.postValue(false);
         paginationParams.setError(true);
       } else if (event is PaginationLoading) {
         paginationParams.setLoading(true);

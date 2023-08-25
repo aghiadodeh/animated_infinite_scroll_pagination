@@ -30,7 +30,8 @@ class PaginationParams<T extends Object> {
   /// detect if current page is last page -> don't load more data if lastPage is true
   bool get lastPage => total == itemsList.value.length && total != 0;
 
-  bool idle = true;
+  /// detect first response
+  final MutableLiveData<bool> idle = MutableLiveData(value: true);
 
   /// set loading value, with hide error
   void setLoading(bool loading) {
@@ -66,10 +67,11 @@ class PaginationParams<T extends Object> {
   /// check items after fetched
   void checkFetchedData() {
     final items = itemsList.value.toList();
-    noItemsFound.postValue(items.isEmpty && !loading.value && total == 0 && !idle);
+    noItemsFound.postValue(items.isEmpty && !loading.value && total == 0 && !idle.value);
   }
 
   PaginationParams() {
+    noItemsFound.addSource(idle, (value) => checkFetchedData());
     noItemsFound.addSource(itemsList, (value) => checkFetchedData());
     noItemsFound.addSource(loading, (value) => checkFetchedData());
   }
