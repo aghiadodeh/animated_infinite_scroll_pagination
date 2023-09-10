@@ -27,7 +27,7 @@ class _PaginationAnimatedGridWidgetState<T extends Object> extends State<Paginat
         itemCount: list.length,
         scrollDirection: widget.configuration.scrollDirection,
         itemBuilder: (context, index) {
-          return widget.configuration.itemBuilder?.call(index, list[index].item);
+          return widget.configuration.itemBuilder?.call(context, index, list[index].item);
         },
       ),
     );

@@ -83,3 +83,7 @@
 
 ## 0.2.8
 * fix display no items widget
+
+
+## 0.3.5
+* fix display no items widget

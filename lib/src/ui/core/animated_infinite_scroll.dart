@@ -11,7 +11,7 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   final ScrollPhysics? physics;
 
   /// builder of each item in list.
-  final Widget Function(int index, T item)? itemBuilder;
+  final Widget Function(BuildContext context, int index, T item)? itemBuilder;
 
   /// pass [topWidget] when you want to place a widget at the top of the first [itemBuilder] widget.
   final Widget? topWidget;
@@ -42,7 +42,7 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   final SliverGridDelegate? gridDelegate;
 
   /// Custom [Widget] inside [AnimatedPaginationScrollView]
-  final Widget Function(List<PaginationModel<T>>)? child;
+  final Widget Function(BuildContext context, List<PaginationModel<T>>)? child;
 
   /// scroll-view padding
   final EdgeInsets? padding;

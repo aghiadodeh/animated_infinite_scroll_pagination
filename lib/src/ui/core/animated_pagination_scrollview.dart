@@ -49,7 +49,7 @@ class _AnimatedPaginationScrollViewState<T extends Object> extends State<Animate
                 } else if (configuration.child != null) {
                   return LiveDataBuilder<List<PaginationModel<T>>>(
                     data: configuration.viewModel.paginationParams.itemsList,
-                    builder: (context, items) => configuration.child!(items),
+                    builder: (context, items) => configuration.child!(context, items),
                   );
                 } else if (configuration.gridDelegate != null) {
                   return PaginationAnimatedGridWidget(configuration);

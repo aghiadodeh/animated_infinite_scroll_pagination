@@ -32,13 +32,13 @@ class _PaginationAnimatedListWidgetState<T extends Object> extends State<Paginat
               itemBuilder: (context, animation, item, i) => SizeFadeTransition(
                 key: ObjectKey(item),
                 animation: animation,
-                child: widget.configuration.itemBuilder?.call(i, item.item),
+                child: widget.configuration.itemBuilder?.call(context, i, item.item),
               ),
               updateItemBuilder: (context, animation, item) {
                 final index = list.indexOf(item);
                 return FadeTransition(
                   opacity: animation,
-                  child: widget.configuration.itemBuilder?.call(index, item.item),
+                  child: widget.configuration.itemBuilder?.call(context, index, item.item),
                 );
               },
             ),

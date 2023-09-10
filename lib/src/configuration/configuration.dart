@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class AnimatedPaginationConfiguration<T extends Object> {
   final PaginationViewModel<T> viewModel;
   final ScrollPhysics? physics;
-  final Widget Function(int index, T item)? itemBuilder;
+  final Widget Function(BuildContext context, int index, T item)? itemBuilder;
   final Widget? topWidget;
   final Widget? loadingWidget;
   final Widget? errorWidget;
@@ -12,7 +12,7 @@ class AnimatedPaginationConfiguration<T extends Object> {
   final Widget? noItemsWidget;
   final Axis scrollDirection;
   final SliverGridDelegate? gridDelegate;
-  final Widget Function(List<PaginationModel<T>>)? child;
+  final Widget Function(BuildContext context, List<PaginationModel<T>>)? child;
   final EdgeInsets? padding;
   final bool? spawnIsolate;
 
