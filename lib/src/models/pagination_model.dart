@@ -1,7 +1,7 @@
-import 'package:uuid/uuid.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uuid/uuid.dart';
 
-class PaginationModel<T extends Object> extends Equatable {
+class PaginationModel<T> extends Equatable {
   final String id;
   final T item;
   final int page;

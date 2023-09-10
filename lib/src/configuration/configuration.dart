@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 class AnimatedPaginationConfiguration<T extends Object> {
   final PaginationViewModel<T> viewModel;
   final ScrollPhysics? physics;
-  final Widget Function(int index, T item)? itemBuilder;
+  final Widget Function(BuildContext context, int index, T item)? itemBuilder;
+  final Widget Function(BuildContext context, int index, T item)?
+      separatorBuilder;
   final Widget? topWidget;
   final Widget? loadingWidget;
   final Widget? errorWidget;
@@ -15,20 +17,28 @@ class AnimatedPaginationConfiguration<T extends Object> {
   final Widget Function(List<PaginationModel<T>>)? child;
   final EdgeInsets? padding;
   final bool? spawnIsolate;
+  final bool? fixedTopWidget;
 
-  const AnimatedPaginationConfiguration({
+  AnimatedPaginationConfiguration({
     required this.viewModel,
     required this.itemBuilder,
+    required this.scrollDirection,
+    required this.gridDelegate,
+    required this.child,
     required this.topWidget,
     required this.footerLoadingWidget,
     required this.loadingWidget,
     required this.errorWidget,
     required this.physics,
-    required this.scrollDirection,
-    required this.gridDelegate,
     required this.noItemsWidget,
-    required this.child,
     required this.padding,
     required this.spawnIsolate,
-  });
+    required this.separatorBuilder,
+    required this.fixedTopWidget,
+  }) {
+    assert((child != null || itemBuilder != null) &&
+        !(child != null && itemBuilder != null));
+    assert((topWidget == null && fixedTopWidget == null) ||
+        (topWidget != null && fixedTopWidget != null));
+  }
 }
