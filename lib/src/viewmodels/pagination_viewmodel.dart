@@ -1,7 +1,8 @@
 import 'dart:async';
+
 import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
 
-mixin PaginationViewModel<T extends Object> {
+mixin PaginationViewModel<T> {
   PaginationParams<T> paginationParams = PaginationParams<T>();
 
   Stream<PaginationState<List<T>>> get state => streamSubscription();
@@ -28,7 +29,9 @@ mixin PaginationViewModel<T extends Object> {
 
   /// fetch new items list from your repository
   Future<void> getPaginationList({int? page}) async {
-    if (!paginationParams.loading.value && !paginationParams.lastPage && !paginationParams.isCached) {
+    if (!paginationParams.loading.value &&
+        !paginationParams.lastPage &&
+        !paginationParams.isCached) {
       if (page != null) paginationParams.page = page;
       paginationParams.loading.value = true;
       await fetchData(paginationParams.page);
@@ -45,7 +48,10 @@ mixin PaginationViewModel<T extends Object> {
     items.removeWhere((element) => element.page == paginationParams.page);
 
     // mapping list
-    List<PaginationModel<T>> list = data.map((e) => PaginationModel(id: randomString(), item: e, page: paginationParams.page)).toList();
+    List<PaginationModel<T>> list = data
+        .map((e) => PaginationModel(
+            id: randomString(), item: e, page: paginationParams.page))
+        .toList();
 
     // update new list
     final newList = items.isNotEmpty ? (items + list).toList() : list;
@@ -59,7 +65,8 @@ mixin PaginationViewModel<T extends Object> {
   /// push new items to start of items-list
   void appendAtFirst(List<T> data) {
     final items = paginationParams.itemsList.value.toList();
-    items.insertAll(0, data.map((e) => PaginationModel(id: randomString(), item: e, page: 1)));
+    items.insertAll(0,
+        data.map((e) => PaginationModel(id: randomString(), item: e, page: 1)));
     paginationParams.itemsList.postValue(items);
   }
 
@@ -83,13 +90,15 @@ mixin PaginationViewModel<T extends Object> {
   /// insert new item to list
   void insertItem(int index, T item, int page) {
     final items = paginationParams.itemsList.value.toList();
-    items.insert(index, PaginationModel(id: randomString(), item: item, page: page));
+    items.insert(
+        index, PaginationModel(id: randomString(), item: item, page: page));
     paginationParams.itemsList.postValue(items);
   }
 
   /// empty list
   void clear() {
-    paginationParams.itemsList.postValue(List<PaginationModel<T>>.empty(growable: true));
+    paginationParams.itemsList
+        .postValue(List<PaginationModel<T>>.empty(growable: true));
     setTotal(0);
   }
 

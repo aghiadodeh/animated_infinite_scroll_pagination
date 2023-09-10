@@ -1,6 +1,7 @@
 import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
 import 'package:animated_infinite_scroll_pagination/src/configuration/configuration.dart';
 import 'package:flutter/material.dart';
+
 import 'animated_pagination_scrollview.dart';
 
 class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
@@ -11,7 +12,11 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   final ScrollPhysics? physics;
 
   /// builder of each item in list.
-  final Widget Function(int index, T item)? itemBuilder;
+  final Widget Function(BuildContext context, int index, T item)? itemBuilder;
+
+  /// builder of items separator in list.
+  final Widget Function(BuildContext context, int index, T item)?
+      separatorBuilder;
 
   /// pass [topWidget] when you want to place a widget at the top of the first [itemBuilder] widget.
   final Widget? topWidget;
@@ -42,7 +47,7 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   final SliverGridDelegate? gridDelegate;
 
   /// Custom [Widget] inside [AnimatedPaginationScrollView]
-  final Widget Function(List<PaginationModel<T>>)? child;
+  final Widget Function(List<PaginationModel<T>>)? childBuilder;
 
   /// scroll-view padding
   final EdgeInsets? padding;
@@ -54,9 +59,12 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
   /// optimal performance.
   final bool? spawnIsolate;
 
-  const AnimatedInfiniteScrollView({
+  final bool? fixedTopWidget;
+
+  const AnimatedInfiniteScrollView.builder({
     required this.viewModel,
-    this.itemBuilder,
+    required final Widget Function(BuildContext context, int index, T item)
+        builder,
     this.topWidget,
     this.footerLoadingWidget,
     this.loadingWidget,
@@ -67,23 +75,52 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.gridDelegate,
-    this.child,
     this.padding,
     this.spawnIsolate,
     Key? key,
-  }) : super(key: key);
+    this.separatorBuilder,
+    this.fixedTopWidget,
+  })  : childBuilder = null,
+        itemBuilder = builder,
+        super(key: key);
+
+  const AnimatedInfiniteScrollView.child({
+    required this.viewModel,
+    required Widget Function(List<PaginationModel<T>>) builder,
+    this.topWidget,
+    this.footerLoadingWidget,
+    this.loadingWidget,
+    this.errorWidget,
+    this.noItemsWidget,
+    this.physics,
+    this.refreshIndicator = false,
+    this.onRefresh,
+    this.scrollDirection = Axis.vertical,
+    this.gridDelegate,
+    this.padding,
+    this.spawnIsolate,
+    Key? key,
+    this.separatorBuilder,
+    this.fixedTopWidget,
+  })  : itemBuilder = null,
+        childBuilder = builder,
+        super(key: key);
 
   @override
-  State<AnimatedInfiniteScrollView<T>> createState() => _AnimatedInfiniteScrollViewState<T>();
+  State<AnimatedInfiniteScrollView<T>> createState() =>
+      _AnimatedInfiniteScrollViewState<T>();
 }
 
-class _AnimatedInfiniteScrollViewState<T extends Object> extends State<AnimatedInfiniteScrollView<T>> {
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+class _AnimatedInfiniteScrollViewState<T extends Object>
+    extends State<AnimatedInfiniteScrollView<T>> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
-  AnimatedPaginationConfiguration<T> get configuration => AnimatedPaginationConfiguration(
+  AnimatedPaginationConfiguration<T> get configuration =>
+      AnimatedPaginationConfiguration(
         viewModel: widget.viewModel,
         itemBuilder: widget.itemBuilder,
-        child: widget.child,
+        child: widget.childBuilder,
         errorWidget: widget.errorWidget,
         footerLoadingWidget: widget.footerLoadingWidget,
         gridDelegate: widget.gridDelegate,
@@ -94,6 +131,9 @@ class _AnimatedInfiniteScrollViewState<T extends Object> extends State<AnimatedI
         topWidget: widget.topWidget,
         padding: widget.padding,
         spawnIsolate: widget.spawnIsolate,
+        separatorBuilder: null,
+        fixedTopWidget:
+            widget.topWidget == null ? null : widget.fixedTopWidget ?? false,
       );
 
   Future<void> _onRefresh() async {
@@ -109,8 +149,10 @@ class _AnimatedInfiniteScrollViewState<T extends Object> extends State<AnimatedI
     return NotificationListener<ScrollNotification>(
       key: UniqueKey(),
       onNotification: (scrollNotification) {
-        if (scrollNotification.metrics.pixels == scrollNotification.metrics.maxScrollExtent) {
-          if (widget.viewModel.paginationParams.page > 1 && widget.viewModel.paginationParams.total == 0) {
+        if (scrollNotification.metrics.pixels ==
+            scrollNotification.metrics.maxScrollExtent) {
+          if (widget.viewModel.paginationParams.page > 1 &&
+              widget.viewModel.paginationParams.total == 0) {
             // do nothing
           } else {
             widget.viewModel.getPaginationList();
@@ -121,8 +163,8 @@ class _AnimatedInfiniteScrollViewState<T extends Object> extends State<AnimatedI
       child: widget.refreshIndicator
           ? RefreshIndicator(
               key: _refreshIndicatorKey,
-              child: AnimatedPaginationScrollView(configuration),
               onRefresh: _onRefresh,
+              child: AnimatedPaginationScrollView(configuration),
             )
           : AnimatedPaginationScrollView(configuration),
     );

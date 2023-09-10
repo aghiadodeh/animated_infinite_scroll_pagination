@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../configuration/configuration.dart';
 
 class FullSizeScrollView<T extends Object> extends StatelessWidget {
@@ -16,14 +17,17 @@ class FullSizeScrollView<T extends Object> extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraint) {
         return SingleChildScrollView(
-          physics: configuration.physics ?? const AlwaysScrollableScrollPhysics(),
+          physics:
+              configuration.physics ?? const AlwaysScrollableScrollPhysics(),
           scrollDirection: configuration.scrollDirection,
           padding: configuration.padding,
           child: ConstrainedBox(
             // expand child
             constraints: BoxConstraints(
               minHeight: constraint.maxHeight,
-              minWidth: configuration.scrollDirection == Axis.horizontal ? constraint.maxWidth : double.infinity,
+              minWidth: configuration.scrollDirection == Axis.horizontal
+                  ? constraint.maxWidth
+                  : double.infinity,
             ),
             child: child,
           ),
