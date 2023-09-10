@@ -86,4 +86,4 @@
 
 
 ## 0.3.5
-* fix display no items widget
+* add context to item builder
