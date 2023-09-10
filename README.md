@@ -135,7 +135,7 @@ Widget build(BuildContext context) {
 ## **AnimatedInfiniteScrollView** Parameters:
 * **viewModel**: The View-Model you declared above in this example *(required)*.
 * **topWidget**: a widget you want to place at the top of the first **builder** widget *(optional)*.
-* **fixedTopWidget**: Control the position of the top widget (Fixed at the top or move with the scroll)*.
+* **fixedTopWidget**: Control the position of the top widget i.e. fixed at the top or move with the scroll *(optional)*.
 * **loadingWidget**: a widget you want to display when first page is loading *(optional)*.
 * **footerLoadingWidget**: a widget you want to display when pagination data is loading *(optional)*.
 * **errorWidget**: a widget you want to display when pagination data  is field loading (throw exception) *(optional)*.
