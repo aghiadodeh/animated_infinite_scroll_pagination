@@ -37,7 +37,7 @@ class _UsersListViewState extends State<UsersListView> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedInfiniteScrollView<User>.builder(
+    return AnimatedInfiniteScrollView<User>(
       viewModel: viewModel,
       loadingWidget: const Center(
         child: SizedBox(
@@ -51,7 +51,7 @@ class _UsersListViewState extends State<UsersListView> {
       // customize your pagination loading widget
       errorWidget: const Text("Pagination Error"),
       // customize your error widget
-      builder: (context, index, item) => UserCard(user: item, onDelete: deleteUser),
+      itemBuilder: (index, item) => UserCard(user: item, onDelete: deleteUser),
       refreshIndicator: true,
     );
   }

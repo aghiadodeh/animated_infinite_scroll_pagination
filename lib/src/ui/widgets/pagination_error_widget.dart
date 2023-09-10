@@ -14,10 +14,12 @@ class PaginationErrorWidget<T extends Object> extends StatelessWidget {
       child: Center(
         child: LiveDataBuilder<bool>(
           data: configuration.viewModel.paginationParams.error,
-          builder: (context, error) => Visibility(
-            visible: error,
-            child: configuration.errorWidget ?? const SizedBox.shrink(),
-          ),
+          builder: (context, error) {
+            if (error) {
+              return configuration.errorWidget ?? const SizedBox();
+            }
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );

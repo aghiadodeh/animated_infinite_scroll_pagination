@@ -1,12 +1,9 @@
 import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
 import 'package:flutterx_live_data/flutterx_live_data.dart';
 
-class PaginationParams<T> {
+class PaginationParams<T extends Object> {
   /// check if there is not items after fetch data
   final noItemsFound = MediatorMutableLiveData<bool>(value: false);
-
-  final queryParameters = MediatorMutableLiveData<AbstractQueryParameters>(
-      value: const AbstractQueryParameters());
 
   /// detect if lastPage data is cached data or remote data
   /// send to server new request to fetch new page-list when the lastPage data is not cached
@@ -19,8 +16,7 @@ class PaginationParams<T> {
   int page = 1;
 
   /// displayed items List in UI
-  final MutableLiveData<List<PaginationModel<T>>> itemsList =
-      MutableLiveData(value: List<PaginationModel<T>>.empty(growable: true));
+  final MutableLiveData<List<PaginationModel<T>>> itemsList = MutableLiveData(value: List<PaginationModel<T>>.empty(growable: true));
 
   /// check if user refresh data by `RefreshIndicator`, when true -> reset paginationParams to default value.
   bool isRefresh = false;
@@ -71,8 +67,7 @@ class PaginationParams<T> {
   /// check items after fetched
   void checkFetchedData() {
     final items = itemsList.value.toList();
-    noItemsFound.postValue(
-        items.isEmpty && !loading.value && total == 0 && !idle.value);
+    noItemsFound.postValue(items.isEmpty && !loading.value && total == 0 && !idle.value);
   }
 
   PaginationParams() {

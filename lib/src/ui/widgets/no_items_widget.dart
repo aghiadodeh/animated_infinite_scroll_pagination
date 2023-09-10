@@ -11,8 +11,10 @@ class NoItemsWidget<T extends Object> extends StatelessWidget {
   Widget build(BuildContext context) {
     return LiveDataBuilder<bool>(
       data: configuration.viewModel.paginationParams.noItemsFound,
-      builder: (context, value) => Visibility(
-          visible: value, child: Center(child: configuration.noItemsWidget)),
+      builder: (context, value) {
+        if (value) return Center(child: configuration.noItemsWidget);
+        return const SizedBox();
+      },
     );
   }
 }

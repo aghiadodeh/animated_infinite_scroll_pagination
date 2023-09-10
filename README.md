@@ -119,12 +119,12 @@ void dispose() {
 
 @override
 Widget build(BuildContext context) {
-  return AnimatedInfiniteScrollView<User>.builder(
+  return AnimatedInfiniteScrollView<User>(
       viewModel: viewModel,
       loadingWidget: const AppProgressBar(), // customize your loading widget
       footerLoadingWidget: const AppProgressBar(), // customize your pagination loading widget
       errorWidget: const Text("Pagination Error"), // customize your error widget
-      builder: (context, index, item) => UserCard(user: item, onDelete: deleteUser),
+      itemBuilder: (index, item) => UserCard(user: item, onDelete: deleteUser),
       refreshIndicator: true,
       onRefresh: () {
         // handle swipe refresh event
@@ -134,8 +134,7 @@ Widget build(BuildContext context) {
 ```
 ## **AnimatedInfiniteScrollView** Parameters:
 * **viewModel**: The View-Model you declared above in this example *(required)*.
-* **topWidget**: a widget you want to place at the top of the first **builder** widget *(optional)*.
-* **fixedTopWidget**: Control the position of the top widget i.e. fixed at the top or move with the scroll *(optional)*.
+* **topWidget**: a widget you want to place at the top of the first **itemBuilder** widget *(optional)*.
 * **loadingWidget**: a widget you want to display when first page is loading *(optional)*.
 * **footerLoadingWidget**: a widget you want to display when pagination data is loading *(optional)*.
 * **errorWidget**: a widget you want to display when pagination data  is field loading (throw exception) *(optional)*.
