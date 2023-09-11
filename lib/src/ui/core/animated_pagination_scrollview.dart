@@ -1,4 +1,3 @@
-import 'package:animated_infinite_scroll_pagination/src/ui/list/pagination_animated_flex.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterx_live_data/flutterx_live_data.dart';
 
@@ -23,31 +22,19 @@ class _AnimatedPaginationScrollViewState<T extends Object>
   @override
   Widget build(BuildContext context) {
     return MultipleLiveDataBuilder.with4<bool, bool, bool, bool>(
-      x1: configuration.viewModel.paginationParams.loading,
-      x2: configuration.viewModel.paginationParams.noItemsFound,
-      x3: configuration.viewModel.paginationParams.error,
-      x4: configuration.viewModel.paginationParams.idle,
-      builder: (context, loading, noItemsFound, error, idle) =>
-          !(configuration.fixedTopWidget ?? false)
-              ? Container(
-                  padding: configuration.padding,
-                  child: PaginationAnimatedSliver(
-                    configuration: widget.configuration,
-                    error: error,
-                    idle: idle,
-                    loading: loading,
-                    noItemsFound: noItemsFound,
-                  ),
-                )
-              : Container(
-                  padding: configuration.padding,
-                  child: PaginationAnimatedFlex(
-                      configuration: configuration,
-                      noItemsFound: noItemsFound,
-                      loading: loading,
-                      error: error,
-                      idle: idle),
-                ),
-    );
+        x1: configuration.viewModel.paginationParams.loading,
+        x2: configuration.viewModel.paginationParams.noItemsFound,
+        x3: configuration.viewModel.paginationParams.error,
+        x4: configuration.viewModel.paginationParams.idle,
+        builder: (context, loading, noItemsFound, error, idle) => Container(
+              padding: configuration.padding,
+              child: PaginationAnimatedSliver(
+                configuration: widget.configuration,
+                error: error,
+                idle: idle,
+                loading: loading,
+                noItemsFound: noItemsFound,
+              ),
+            ));
   }
 }

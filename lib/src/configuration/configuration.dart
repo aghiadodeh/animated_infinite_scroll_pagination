@@ -18,6 +18,7 @@ class AnimatedPaginationConfiguration<T> {
   final EdgeInsets? padding;
   final bool? spawnIsolate;
   final bool? fixedTopWidget;
+  final bool? sliverTopWidget;
 
   AnimatedPaginationConfiguration({
     required this.viewModel,
@@ -35,8 +36,11 @@ class AnimatedPaginationConfiguration<T> {
     required this.spawnIsolate,
     required this.separatorBuilder,
     required this.fixedTopWidget,
+    required this.sliverTopWidget,
   }) {
     assert((child != null || itemBuilder != null) &&
         !(child != null && itemBuilder != null));
+    assert((fixedTopWidget == true && !(sliverTopWidget ?? false)) ||
+        fixedTopWidget != true);
   }
 }

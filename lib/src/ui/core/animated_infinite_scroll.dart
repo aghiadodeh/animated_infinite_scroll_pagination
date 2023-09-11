@@ -61,6 +61,8 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
 
   final bool? fixedTopWidget;
 
+  final bool? sliverTopWidget;
+
   const AnimatedInfiniteScrollView.builder({
     required this.viewModel,
     required final Widget Function(BuildContext context, int index, T item)
@@ -80,6 +82,7 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
     Key? key,
     this.separatorBuilder,
     this.fixedTopWidget,
+    this.sliverTopWidget,
   })  : childBuilder = null,
         itemBuilder = builder,
         super(key: key);
@@ -102,6 +105,7 @@ class AnimatedInfiniteScrollView<T extends Object> extends StatefulWidget {
     Key? key,
     this.separatorBuilder,
     this.fixedTopWidget,
+    this.sliverTopWidget,
   })  : itemBuilder = null,
         childBuilder = builder,
         super(key: key);
@@ -133,6 +137,11 @@ class _AnimatedInfiniteScrollViewState<T extends Object>
         spawnIsolate: widget.spawnIsolate,
         separatorBuilder: widget.separatorBuilder,
         fixedTopWidget: widget.topWidget == null ? null : widget.fixedTopWidget,
+        sliverTopWidget: widget.topWidget == null
+            ? null
+            : !(widget.fixedTopWidget ?? false)
+                ? widget.sliverTopWidget
+                : null,
       );
 
   Future<void> _onRefresh() async {

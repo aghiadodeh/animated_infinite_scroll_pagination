@@ -18,7 +18,9 @@ class PaginationFooterLoaderWidget<T> extends StatelessWidget {
       x2: configuration.viewModel.paginationParams.itemsList,
       builder: (context, loading, itemsList) => AnimatedCrossFade(
         duration: const Duration(milliseconds: 100),
-        crossFadeState: loading && itemsList.isNotEmpty
+        crossFadeState: loading &&
+                itemsList.isNotEmpty &&
+                !configuration.viewModel.paginationParams.isRefresh
             ? CrossFadeState.showFirst
             : CrossFadeState.showSecond,
         firstChild: Padding(
