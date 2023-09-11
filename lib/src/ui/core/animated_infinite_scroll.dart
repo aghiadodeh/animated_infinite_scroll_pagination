@@ -131,9 +131,8 @@ class _AnimatedInfiniteScrollViewState<T extends Object>
         topWidget: widget.topWidget,
         padding: widget.padding,
         spawnIsolate: widget.spawnIsolate,
-        separatorBuilder: null,
-        fixedTopWidget:
-            widget.topWidget == null ? null : widget.fixedTopWidget ?? false,
+        separatorBuilder: widget.separatorBuilder,
+        fixedTopWidget: widget.topWidget == null ? null : widget.fixedTopWidget,
       );
 
   Future<void> _onRefresh() async {

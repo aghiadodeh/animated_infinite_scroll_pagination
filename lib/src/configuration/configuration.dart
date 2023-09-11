@@ -1,7 +1,7 @@
 import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
 import 'package:flutter/material.dart';
 
-class AnimatedPaginationConfiguration<T extends Object> {
+class AnimatedPaginationConfiguration<T> {
   final PaginationViewModel<T> viewModel;
   final ScrollPhysics? physics;
   final Widget Function(BuildContext context, int index, T item)? itemBuilder;
@@ -38,7 +38,5 @@ class AnimatedPaginationConfiguration<T extends Object> {
   }) {
     assert((child != null || itemBuilder != null) &&
         !(child != null && itemBuilder != null));
-    assert((topWidget == null && fixedTopWidget == null) ||
-        (topWidget != null && fixedTopWidget != null));
   }
 }

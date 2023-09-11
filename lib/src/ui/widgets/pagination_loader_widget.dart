@@ -4,7 +4,7 @@ import 'package:flutterx_live_data/flutterx_live_data.dart';
 
 import 'app_progress_bar.dart';
 
-class PaginationLoaderWidget<T extends Object> extends StatelessWidget {
+class PaginationLoaderWidget<T> extends StatelessWidget {
   final AnimatedPaginationConfiguration<T> configuration;
 
   const PaginationLoaderWidget(this.configuration, {Key? key})

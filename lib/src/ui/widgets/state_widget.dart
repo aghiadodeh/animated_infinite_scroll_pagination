@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../configuration/configuration.dart';
 import 'app_progress_bar.dart';
 
-class StateWidget<T extends Object> extends StatelessWidget {
+class StateWidget<T> extends StatelessWidget {
   final AnimatedPaginationConfiguration<T> configuration;
   final bool loading;
   final bool noItemsFound;

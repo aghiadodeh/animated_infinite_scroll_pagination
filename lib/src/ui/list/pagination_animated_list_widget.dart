@@ -5,8 +5,9 @@ import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reord
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
 
 import '../../configuration/configuration.dart';
+import '../widgets/ItemFlex.dart';
 
-class PaginationAnimatedListWidget<T extends Object> extends StatefulWidget {
+class PaginationAnimatedListWidget<T> extends StatefulWidget {
   final AnimatedPaginationConfiguration<T> configuration;
 
   const PaginationAnimatedListWidget(this.configuration, {Key? key})
@@ -17,29 +18,9 @@ class PaginationAnimatedListWidget<T extends Object> extends StatefulWidget {
       _PaginationAnimatedListWidgetState<T>();
 }
 
-class _PaginationAnimatedListWidgetState<T extends Object>
+class _PaginationAnimatedListWidgetState<T>
     extends State<PaginationAnimatedListWidget<T>> {
   PaginationViewModel<T> get viewModel => widget.configuration.viewModel;
-
-  Widget itemBuilder(BuildContext context, int index, T item) {
-    if (widget.configuration.separatorBuilder == null) {
-      return widget.configuration.itemBuilder!(context, index, item);
-    }
-    if (widget.configuration.scrollDirection == Axis.horizontal) {
-      return Row(
-        children: [
-          widget.configuration.itemBuilder!(context, index, item),
-          widget.configuration.separatorBuilder!(context, index, item),
-        ],
-      );
-    }
-    return Column(
-      children: [
-        widget.configuration.itemBuilder!(context, index, item),
-        widget.configuration.separatorBuilder!(context, index, item),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +31,7 @@ class _PaginationAnimatedListWidgetState<T extends Object>
           : ImplicitlyAnimatedList<PaginationModel<T>>(
               spawnIsolate: widget.configuration.spawnIsolate,
               items: list,
-              physics: widget.configuration.topWidget == null
-                  ? widget.configuration.physics
-                  : const NeverScrollableScrollPhysics(),
+              physics: widget.configuration.physics,
               scrollDirection: widget.configuration.scrollDirection,
               areItemsTheSame: (a, b) => widget.configuration.viewModel
                   .areItemsTheSame(a.item, b.item),
@@ -60,7 +39,11 @@ class _PaginationAnimatedListWidgetState<T extends Object>
                   SizeFadeTransition(
                 key: ObjectKey(item),
                 animation: animation,
-                child: itemBuilder(context, index, item.item),
+                child: ItemFlex(
+                    configuration: widget.configuration,
+                    index: index,
+                    model: list[index],
+                    totalItems: list.length),
               ),
               updateItemBuilder: (context, animation, model) {
                 final index = list.indexWhere((value) => widget
@@ -68,7 +51,12 @@ class _PaginationAnimatedListWidgetState<T extends Object>
                     .areItemsTheSame(value.item, model.item));
                 return FadeTransition(
                   opacity: animation,
-                  child: itemBuilder(context, index, model.item),
+                  child: ItemFlex(
+                    configuration: widget.configuration,
+                    index: index,
+                    totalItems: list.length,
+                    model: model,
+                  ),
                 );
               },
             ),
