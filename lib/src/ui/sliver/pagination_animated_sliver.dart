@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutterx_live_data/flutterx_live_data.dart';
-import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import '../../../animated_infinite_scroll_pagination.dart';
 import '../../configuration/configuration.dart';
 import '../widgets/item_flex.dart';

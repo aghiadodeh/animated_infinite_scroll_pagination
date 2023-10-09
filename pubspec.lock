@@ -94,9 +94,11 @@ packages:
   implicitly_animated_reorderable_list:
     dependency: "direct main"
     description:
-      path: "../implicitly_animated_reorderable_list"
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: c57ee26bd2263149eab313fc1766943ede1d06a9
+      url: "https://github.com/Nitro963/implicitly_animated_reorderable_list.git"
+    source: git
     version: "0.5.1"
   lints:
     dependency: transitive

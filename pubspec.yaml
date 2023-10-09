@@ -11,7 +11,10 @@ dependencies:
   rxdart: ^0.27.3
   flutterx_live_data: ^1.8.6
   implicitly_animated_reorderable_list:
-    path: ../implicitly_animated_reorderable_list
+    git:
+      url: https://github.com/Nitro963/implicitly_animated_reorderable_list.git
+      ref: master
+
   equatable: ^2.0.5
   uuid: ^4.0.0
   sliver_tools: ^0.2.12
