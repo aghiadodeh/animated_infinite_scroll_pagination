@@ -1,40 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutterx_live_data/flutterx_live_data.dart';
 
 import '../../configuration/configuration.dart';
-import '../list/pagination_animated_sliver.dart';
+import '../sliver/pagination_animated_sliver.dart';
 
-class AnimatedPaginationScrollView<T extends Object> extends StatefulWidget {
-  final AnimatedPaginationConfiguration<T> configuration;
+class AnimatedPaginationScrollView<T, E extends Exception>
+    extends StatefulWidget {
+  final AnimatedPaginationConfiguration<T, E> configuration;
 
   const AnimatedPaginationScrollView(this.configuration, {Key? key})
       : super(key: key);
 
   @override
-  State<AnimatedPaginationScrollView<T>> createState() =>
-      _AnimatedPaginationScrollViewState<T>();
+  State<AnimatedPaginationScrollView<T, E>> createState() =>
+      _AnimatedPaginationScrollViewState<T, E>();
 }
 
-class _AnimatedPaginationScrollViewState<T extends Object>
-    extends State<AnimatedPaginationScrollView<T>> {
-  AnimatedPaginationConfiguration<T> get configuration => widget.configuration;
+class _AnimatedPaginationScrollViewState<T, E extends Exception>
+    extends State<AnimatedPaginationScrollView<T, E>> {
+  AnimatedPaginationConfiguration<T, E> get configuration =>
+      widget.configuration;
 
   @override
   Widget build(BuildContext context) {
-    return MultipleLiveDataBuilder.with4<bool, bool, bool, bool>(
-        x1: configuration.viewModel.paginationParams.loading,
-        x2: configuration.viewModel.paginationParams.noItemsFound,
-        x3: configuration.viewModel.paginationParams.error,
-        x4: configuration.viewModel.paginationParams.idle,
-        builder: (context, loading, noItemsFound, error, idle) => Container(
-              padding: configuration.padding,
-              child: PaginationAnimatedSliver(
-                configuration: widget.configuration,
-                error: error,
-                idle: idle,
-                loading: loading,
-                noItemsFound: noItemsFound,
-              ),
-            ));
+    return Padding(
+      padding: configuration.padding ?? EdgeInsets.zero,
+      child: PaginationAnimatedSliver(
+        configuration: widget.configuration,
+      ),
+    );
   }
 }

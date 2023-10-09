@@ -1,24 +1,26 @@
-abstract class PaginationState<T> {
+abstract class PaginationState {
   const PaginationState();
 }
 
 /// A Pagination with initial value
-class PaginationInitial<T> extends PaginationState<T> {
+class PaginationInitial extends PaginationState {
   const PaginationInitial();
 }
 
 /// A Pagination with error message
-class PaginationError<T> extends PaginationState<T> {
-  const PaginationError();
+class PaginationError<T extends Exception> extends PaginationState {
+  final T error;
+
+  const PaginationError(this.error);
 }
 
 /// A non complete Pagination
-class PaginationLoading<T> extends PaginationState<T> {
+class PaginationLoading extends PaginationState {
   const PaginationLoading();
 }
 
 /// A Successfully loaded Pagination
-class PaginationSuccess<T> extends PaginationState<T> {
+class PaginationSuccess<T> extends PaginationState {
   final T? data;
 
   /// Data from local storage

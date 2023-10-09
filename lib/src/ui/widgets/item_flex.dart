@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../../animated_infinite_scroll_pagination.dart';
 
-class ItemFlex<T> extends StatelessWidget {
-  final AnimatedPaginationConfiguration<T> configuration;
+class ItemFlex<T, E extends Exception> extends StatelessWidget {
+  final AnimatedPaginationConfiguration<T, E> configuration;
   final int index;
   final int totalItems;
   final PaginationModel<T> model;

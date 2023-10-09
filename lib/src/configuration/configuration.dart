@@ -1,32 +1,34 @@
 import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
 import 'package:flutter/material.dart';
 
-class AnimatedPaginationConfiguration<T> {
-  final PaginationViewModel<T> viewModel;
+class AnimatedPaginationConfiguration<T, E extends Exception> {
+  final PaginationViewModel<T, E> viewModel;
   final ScrollPhysics? physics;
   final Widget Function(BuildContext context, int index, T item)? itemBuilder;
   final Widget Function(BuildContext context, int index, T item)?
       separatorBuilder;
-  final Widget? topWidget;
+  final Widget? header;
   final Widget? loadingWidget;
   final Widget? errorWidget;
   final Widget? footerLoadingWidget;
   final Widget? noItemsWidget;
   final Axis scrollDirection;
   final SliverGridDelegate? gridDelegate;
-  final Widget Function(List<PaginationModel<T>>)? child;
-  final EdgeInsets? padding;
+  final Widget Function(BuildContext context, List<PaginationModel<T>>)? child;
+  final EdgeInsetsGeometry? padding;
   final bool? spawnIsolate;
-  final bool? fixedTopWidget;
-  final bool? sliverTopWidget;
+  final bool? sliverHeader;
+  final bool implicitlyAnimated;
+  final ScrollController? controller;
 
   AnimatedPaginationConfiguration({
     required this.viewModel,
     required this.itemBuilder,
+    required this.controller,
     required this.scrollDirection,
     required this.gridDelegate,
     required this.child,
-    required this.topWidget,
+    required this.header,
     required this.footerLoadingWidget,
     required this.loadingWidget,
     required this.errorWidget,
@@ -35,12 +37,10 @@ class AnimatedPaginationConfiguration<T> {
     required this.padding,
     required this.spawnIsolate,
     required this.separatorBuilder,
-    required this.fixedTopWidget,
-    required this.sliverTopWidget,
+    required this.sliverHeader,
+    required this.implicitlyAnimated,
   }) {
     assert((child != null || itemBuilder != null) &&
         !(child != null && itemBuilder != null));
-    assert((fixedTopWidget == true && !(sliverTopWidget ?? false)) ||
-        fixedTopWidget != true);
   }
 }

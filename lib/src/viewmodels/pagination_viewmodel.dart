@@ -1,28 +1,31 @@
 import 'dart:async';
 
-import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
+import '../models/pagination_model.dart';
+import '../models/response_state.dart';
+import 'pagination_params.dart';
 
-mixin PaginationViewModel<T> {
-  PaginationParams<T> paginationParams = PaginationParams<T>();
+mixin PaginationViewModel<T, E extends Exception> {
+  PaginationParams<T, E> paginationParams = PaginationParams<T, E>();
 
-  Stream<PaginationState<List<T>>> get state => streamSubscription();
+  Stream<PaginationState> get state => streamSubscription();
   late StreamSubscription _streamSubscription;
 
   /// listen for new data from your repository
   void listen() {
     _streamSubscription = state.listen((event) {
-      if (event is PaginationSuccess) {
-        paginationParams.idle.postValue(false);
-        final response = (event as PaginationSuccess);
-        if (response.data is List<T>) {
-          paginationParams.isCached = response.cached;
-          _appendData(response.data);
-        }
-      } else if (event is PaginationError) {
-        paginationParams.idle.postValue(false);
-        paginationParams.setError(true);
-      } else if (event is PaginationLoading) {
-        paginationParams.setLoading(true);
+      switch (event) {
+        case PaginationSuccess(:final List<T> data, :final cached):
+          paginationParams.idle.postValue(false);
+          paginationParams.isCached = cached;
+          _appendData(data);
+          break;
+        case PaginationError(:final E error):
+          paginationParams.idle.postValue(false);
+          paginationParams.setError(error);
+          break;
+        case PaginationLoading():
+          paginationParams.setLoading(true);
+          break;
       }
     });
   }
@@ -59,7 +62,7 @@ mixin PaginationViewModel<T> {
 
     if (!paginationParams.isCached) incrementPage();
     paginationParams.setLoading(false);
-    paginationParams.setError(false);
+    paginationParams.setError(null);
   }
 
   /// push new items to start of items-list
@@ -104,7 +107,7 @@ mixin PaginationViewModel<T> {
 
   /// call this method when your Widget dispose
   void dispose() {
-    paginationParams = PaginationParams<T>();
+    paginationParams = PaginationParams<T, E>();
     _streamSubscription.cancel();
   }
 
@@ -120,7 +123,7 @@ mixin PaginationViewModel<T> {
   ///
   /// create a streamController in your repository and add new value when you get new data
   /// from server or sqLite
-  Stream<PaginationState<List<T>>> streamSubscription();
+  Stream<PaginationState> streamSubscription();
 
   /// decide whether two object represent the same Item
   bool areItemsTheSame(T a, T b);

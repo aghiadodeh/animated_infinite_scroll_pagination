@@ -1,7 +1,7 @@
 import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
 import 'package:flutterx_live_data/flutterx_live_data.dart';
 
-class PaginationParams<T> {
+class PaginationParams<T, E extends Exception> {
   /// check if there is not items after fetch data
   final noItemsFound = MediatorMutableLiveData<bool>(value: false);
 
@@ -29,7 +29,7 @@ class PaginationParams<T> {
   final MutableLiveData<bool> loading = MutableLiveData(value: false);
 
   /// server error
-  final MutableLiveData<bool> error = MutableLiveData(value: false);
+  final MutableLiveData<E?> error = MutableLiveData(value: null);
 
   /// detect if current page is last page -> don't load more data if lastPage is true
   bool get lastPage => total == itemsList.value.length && total != 0;
@@ -39,12 +39,12 @@ class PaginationParams<T> {
 
   /// set loading value, with hide error
   void setLoading(bool loading) {
-    error.postValue(false);
+    error.postValue(null);
     this.loading.postValue(loading);
   }
 
   /// set error value, with hide loading
-  void setError(bool error) {
+  void setError(E? error) {
     loading.postValue(false);
     this.error.postValue(error);
   }
@@ -70,9 +70,10 @@ class PaginationParams<T> {
 
   /// check items after fetched
   void checkFetchedData() {
-    final items = itemsList.value.toList();
+    final items = itemsList.value;
     noItemsFound.postValue(
-        items.isEmpty && !loading.value && total == 0 && !idle.value);
+        (items.isEmpty && !loading.value && total == 0 && !idle.value) ||
+            (noItemsFound.value && loading.value));
   }
 
   PaginationParams() {

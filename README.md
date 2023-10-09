@@ -41,7 +41,66 @@ Now we're going to create our **View-Model**.
 The View-Model will be something like this:
 ```dart
 class UsersViewModel extends PaginationViewModel<User> {
-  final repository = UserRepository();
+  Widget buildItem(BuildContext context, int index, Alarm alarm) => Card(
+    clipBehavior: Clip.antiAlias,
+    surfaceTintColor:
+    Theme.of(context).extension<CardColorsAlt>()!.surfaceTint,
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.r),
+        side: BorderSide(
+            color: Theme.of(context).colorScheme.outlineVariant)),
+    child: InkWell(
+      onTap: () =>
+          findInstance<AppRouter>().push(AddAlarmRoute(alarm: alarm)),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 16.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(DesignIcons.clock),
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                    Text(
+                      (intl.DateFormat.jm(context.locale.languageCode)
+                        ..useNativeDigits = false)
+                          .format(alarm.time),
+                      style: TextStyle(fontSize: 18.sp),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16.h),
+                Wrap(
+                  spacing: 8.w,
+                  runSpacing: 8.h,
+                  children: alarm.doses
+                      .map((e) =>
+                      DoseContainer(name: e.name, amount: e.amount))
+                      .toList(),
+                ),
+                SizedBox(height: 8.h),
+                Wrap(
+                  spacing: 8.w,
+                  children: alarm.days
+                      .map((e) => WeekdayContainer(weekday: e))
+                      .toList(),
+                ),
+              ],
+            ),
+            Switch(
+                value: alarm.active,
+                onChanged: (value) =>
+                    viewModel.onToggleAlarm(alarm, value)),
+          ],
+        ),
+      ),
+    ),
+  );
   final _controller = StreamController<PaginationState<List<User>>>();
 
   Stream<PaginationState<List<User>>> get result async* {
@@ -119,12 +178,12 @@ void dispose() {
 
 @override
 Widget build(BuildContext context) {
-  return AnimatedInfiniteScrollView<User>.builder(
+  return AnimatedInfiniteScrollView<User>(
       viewModel: viewModel,
       loadingWidget: const AppProgressBar(), // customize your loading widget
       footerLoadingWidget: const AppProgressBar(), // customize your pagination loading widget
       errorWidget: const Text("Pagination Error"), // customize your error widget
-      builder: (context, index, item) => UserCard(user: item, onDelete: deleteUser),
+      itemBuilder: (index, item) => UserCard(user: item, onDelete: deleteUser),
       refreshIndicator: true,
       onRefresh: () {
         // handle swipe refresh event
@@ -134,8 +193,7 @@ Widget build(BuildContext context) {
 ```
 ## **AnimatedInfiniteScrollView** Parameters:
 * **viewModel**: The View-Model you declared above in this example *(required)*.
-* **topWidget**: a widget you want to place at the top of the first **builder** widget *(optional)*.
-* **fixedTopWidget**: Control the position of the top widget i.e. fixed at the top or move with the scroll *(optional)*.
+* **topWidget**: a widget you want to place at the top of the first **itemBuilder** widget *(optional)*.
 * **loadingWidget**: a widget you want to display when first page is loading *(optional)*.
 * **footerLoadingWidget**: a widget you want to display when pagination data is loading *(optional)*.
 * **errorWidget**: a widget you want to display when pagination data  is field loading (throw exception) *(optional)*.
