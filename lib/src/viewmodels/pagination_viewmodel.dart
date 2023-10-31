@@ -15,7 +15,6 @@ mixin PaginationViewModel<T, E extends Exception> {
     _streamSubscription = state.listen((event) {
       switch (event) {
         case PaginationSuccess(:final List<T> data, :final cached):
-          paginationParams.idle.postValue(false);
           paginationParams.isCached = cached;
           _appendData(data);
           break;
@@ -45,6 +44,8 @@ mixin PaginationViewModel<T, E extends Exception> {
   /// remove cached-list when add remote-list with same page
   void _appendData(List<T> data) {
     paginationParams.handleRefresh();
+    paginationParams.handleReset();
+    paginationParams.idle.postValue(false);
 
     // remove cached data when remote data is exists
     final items = paginationParams.itemsList.value.toList();
@@ -81,6 +82,11 @@ mixin PaginationViewModel<T, E extends Exception> {
   /// refresh items-list, reload items from first page.
   void refresh() {
     paginationParams.refresh();
+  }
+
+  /// reset items-list, reload items from first page and start from idle state.
+  void reset() {
+    paginationParams.reset();
   }
 
   /// remove item from list

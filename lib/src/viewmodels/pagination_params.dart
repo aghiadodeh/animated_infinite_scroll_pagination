@@ -20,10 +20,11 @@ class PaginationParams<T, E extends Exception> {
 
   /// displayed items List in UI
   final MutableLiveData<List<PaginationModel<T>>> itemsList =
-      MutableLiveData(value: List<PaginationModel<T>>.empty(growable: true));
+  MutableLiveData(value: List<PaginationModel<T>>.empty(growable: true));
 
   /// check if user refresh data by `RefreshIndicator`, when true -> reset paginationParams to default value.
   bool isRefresh = false;
+  bool isReset = false;
 
   /// is request in loading status
   final MutableLiveData<bool> loading = MutableLiveData(value: false);
@@ -57,11 +58,30 @@ class PaginationParams<T, E extends Exception> {
     total = 0;
   }
 
+  void reset() {
+    idle.postValue(true);
+    isCached = false;
+    isReset = true;
+    page = 1;
+    total = 0;
+  }
+
   /// reset items-list when user refresh data
   /// this operation called when new data fetched
   void handleRefresh() {
-    if (isRefresh) {
-      isRefresh = false;
+    if (isReset) {
+      isReset = false;
+      if (itemsList.value.isNotEmpty) {
+        itemsList.postValue(List<PaginationModel<T>>.empty(growable: true));
+      }
+    }
+  }
+
+  /// reset items-list when user refresh data
+  /// this operation called when new data fetched
+  void handleReset() {
+    if (isReset) {
+      isReset = false;
       if (itemsList.value.isNotEmpty) {
         itemsList.postValue(List<PaginationModel<T>>.empty(growable: true));
       }
@@ -81,4 +101,7 @@ class PaginationParams<T, E extends Exception> {
     noItemsFound.addSource(itemsList, (value) => checkFetchedData());
     noItemsFound.addSource(loading, (value) => checkFetchedData());
   }
+
+  bool get hasCenteredState =>
+      error.value != null || noItemsFound.value || idle.value;
 }

@@ -67,6 +67,8 @@ class AnimatedInfiniteScrollView<T, E extends Exception>
 
   final ScrollController? controller;
 
+  final bool shrinkWrap;
+
   const AnimatedInfiniteScrollView.builder({
     required this.viewModel,
     required final Widget Function(BuildContext context, int index, T item)
@@ -88,6 +90,7 @@ class AnimatedInfiniteScrollView<T, E extends Exception>
     this.sliverHeader,
     this.implicitlyAnimated = true,
     this.controller,
+    this.shrinkWrap = false,
   })  : childBuilder = null,
         itemBuilder = builder,
         super(key: key);
@@ -113,6 +116,7 @@ class AnimatedInfiniteScrollView<T, E extends Exception>
     this.sliverHeader,
     this.implicitlyAnimated = true,
     this.controller,
+    this.shrinkWrap = false,
   })  : itemBuilder = null,
         childBuilder = builder,
         super(key: key);
@@ -129,6 +133,7 @@ class _AnimatedInfiniteScrollViewState<T, E extends Exception>
 
   AnimatedPaginationConfiguration<T, E> get configuration =>
       AnimatedPaginationConfiguration(
+        shrinkWrap: widget.shrinkWrap,
         viewModel: widget.viewModel,
         controller: widget.controller,
         itemBuilder: widget.itemBuilder,

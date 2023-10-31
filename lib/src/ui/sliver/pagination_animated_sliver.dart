@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutterx_live_data/flutterx_live_data.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:sliver_tools/sliver_tools.dart';
+
 import '../../../animated_infinite_scroll_pagination.dart';
 import '../../configuration/configuration.dart';
 import '../widgets/item_flex.dart';
@@ -22,33 +21,11 @@ class PaginationAnimatedSliver<T, E extends Exception> extends StatefulWidget {
 }
 
 class _PaginationAnimatedSliverState<T, E extends Exception>
-    extends State<PaginationAnimatedSliver<T, E>> with ObserverMixin {
+    extends State<PaginationAnimatedSliver<T, E>> {
   AnimatedPaginationConfiguration<T, E> get configuration =>
       widget.configuration;
-  final GlobalKey<SliverAnimatedGridState> sliverGridKey =
-      GlobalKey<SliverAnimatedGridState>();
-  int listLen = 0;
 
   PaginationViewModel<T, E> get viewModel => widget.configuration.viewModel;
-
-  @override
-  void initState() {
-    listLen = viewModel.paginationParams.itemsList.value.length;
-    doRegister();
-    super.initState();
-  }
-
-  // Widget _buildRemovedGridItem(PaginationModel<T> item, int index,
-  //     BuildContext context, Animation<double> animation) {
-  //   return FadeTransition(
-  //     opacity: animation,
-  //     child: ItemFlex(
-  //         configuration: configuration,
-  //         index: index,
-  //         model: item,
-  //         totalItems: viewModel.paginationParams.total),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +41,7 @@ class _PaginationAnimatedSliverState<T, E extends Exception>
             scrollDirection: configuration.scrollDirection,
             controller: configuration.controller,
             physics: configuration.physics,
+            shrinkWrap: configuration.shrinkWrap,
             slivers: [
               if (!(configuration.sliverHeader ?? false))
                 SliverToBoxAdapter(child: configuration.header),
@@ -71,11 +49,11 @@ class _PaginationAnimatedSliverState<T, E extends Exception>
                   configuration.header != null)
                 configuration.header!,
               SliverVisibility(
-                visible: !idle,
+                visible: !hasCenteredState,
                 maintainAnimation: true,
                 maintainState: true,
-                sliver: MultiSliver(
-                  children: [
+                sliver: SliverMainAxisGroup(
+                  slivers: [
                     SliverLayoutBuilder(
                       builder: (context, _) {
                         if (configuration.child != null) {
@@ -180,11 +158,13 @@ class _PaginationAnimatedSliverState<T, E extends Exception>
                             child: SizedBox(
                                 height: configuration.scrollDirection ==
                                         Axis.vertical
-                                    ? constraints.remainingPaintExtent
+                                    ? constraints.remainingPaintExtent.clamp(
+                                        0, MediaQuery.of(context).size.height)
                                     : double.infinity,
                                 width: configuration.scrollDirection ==
                                         Axis.horizontal
-                                    ? constraints.remainingPaintExtent
+                                    ? constraints.remainingPaintExtent.clamp(
+                                        0, MediaQuery.of(context).size.width)
                                     : double.infinity,
                                 child: StateWidget(
                                   configuration,
@@ -200,22 +180,5 @@ class _PaginationAnimatedSliverState<T, E extends Exception>
             ],
           );
         });
-  }
-
-  @override
-  FutureOr<void> registerObservers() {
-    listLen = viewModel.paginationParams.itemsList.value.length;
-    viewModel.paginationParams.itemsList.observe(this, (value) {
-      if (value.length > listLen) {
-        sliverGridKey.currentState
-            ?.insertAllItems(listLen, value.length - listLen);
-      } else {
-        for (int i = listLen - 1; i > value.length - listLen + 1; i--) {
-          sliverGridKey.currentState
-              ?.removeItem(i, (context, animation) => const SizedBox.shrink());
-        }
-      }
-      listLen = value.length;
-    });
   }
 }

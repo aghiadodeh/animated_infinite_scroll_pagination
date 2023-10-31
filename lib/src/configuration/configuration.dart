@@ -20,9 +20,11 @@ class AnimatedPaginationConfiguration<T, E extends Exception> {
   final bool? sliverHeader;
   final bool implicitlyAnimated;
   final ScrollController? controller;
+  final bool shrinkWrap;
 
   AnimatedPaginationConfiguration({
     required this.viewModel,
+    required this.shrinkWrap,
     required this.itemBuilder,
     required this.controller,
     required this.scrollDirection,
