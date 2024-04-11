@@ -97,10 +97,12 @@ class _AnimatedInfiniteScrollViewState<T extends Object> extends State<AnimatedI
       );
 
   Future<void> _onRefresh() async {
-    _refreshIndicatorKey.currentState?.show();
-    widget.onRefresh?.call();
-    widget.viewModel.refresh();
-    await widget.viewModel.getPaginationList();
+    if (!widget.viewModel.paginationParams.loading.value) {
+      _refreshIndicatorKey.currentState?.show();
+      widget.onRefresh?.call();
+      widget.viewModel.refresh();
+      await widget.viewModel.getPaginationList();
+    }
     return Future.value();
   }
 

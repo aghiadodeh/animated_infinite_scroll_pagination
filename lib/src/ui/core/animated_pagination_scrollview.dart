@@ -2,12 +2,11 @@ import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pag
 import 'package:animated_infinite_scroll_pagination/src/ui/list/pagination_animated_grid_widget.dart';
 import 'package:animated_infinite_scroll_pagination/src/ui/list/pagination_animated_list_widget.dart';
 import 'package:animated_infinite_scroll_pagination/src/ui/widgets/full_size_scrollview.dart';
+import 'package:animated_infinite_scroll_pagination/src/ui/widgets/pagination_error_widget.dart';
 import 'package:animated_infinite_scroll_pagination/src/ui/widgets/pagination_footer_loader_widget.dart';
-import 'package:animated_infinite_scroll_pagination/src/ui/widgets/pagination_loader_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterx_live_data/flutterx_live_data.dart';
 import '../../configuration/configuration.dart';
-import '../widgets/state_widget.dart';
 
 class AnimatedPaginationScrollView<T extends Object> extends StatefulWidget {
   final AnimatedPaginationConfiguration<T> configuration;
@@ -34,7 +33,62 @@ class _AnimatedPaginationScrollViewState<T extends Object> extends State<Animate
 
   @override
   Widget build(BuildContext context) {
-    return FullSizeScrollView(
+    return Stack(
+      children: [
+        // scroll view
+        FullSizeScrollView(
+          configuration: configuration,
+          child: builder(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              configuration.topWidget ?? const SizedBox(),
+              Builder(
+                builder: (context) {
+                  if (configuration.child != null) {
+                    return LiveDataBuilder<List<PaginationModel<T>>>(
+                      data: configuration.viewModel.paginationParams.itemsList,
+                      builder: (context, items) => configuration.child!(context, items),
+                    );
+                  } else if (configuration.gridDelegate != null) {
+                    return PaginationAnimatedGridWidget(configuration);
+                  } else {
+                    return PaginationAnimatedListWidget(configuration);
+                  }
+                },
+              ),
+              PaginationFooterLoaderWidget(configuration),
+              PaginationErrorWidget(configuration),
+            ],
+          ),
+        ),
+
+        // loading widget
+        LiveDataBuilder<bool>(
+          data: configuration.viewModel.paginationParams.loading,
+          builder: (context, loading) {
+            if (loading && configuration.viewModel.paginationParams.total == 0 && configuration.viewModel.paginationParams.page == 1) {
+              return configuration.loadingWidget ?? const CircularProgressIndicator.adaptive();
+            }
+            return const SizedBox();
+          },
+        ),
+
+        // no items widget
+        LiveDataBuilder<bool>(
+          data: configuration.viewModel.paginationParams.noItemsFound,
+          builder: (context, noItemsFound) {
+            if (noItemsFound && configuration.noItemsWidget != null) {
+              return configuration.noItemsWidget!;
+            }
+            return const SizedBox();
+          },
+        ),
+      ],
+    );
+  }
+}
+/*
+return FullSizeScrollView(
       configuration: configuration,
       child: LiveDataBuilder<bool>(
         data: configuration.viewModel.paginationParams.idle,
@@ -65,5 +119,4 @@ class _AnimatedPaginationScrollViewState<T extends Object> extends State<Animate
         ),
       ),
     );
-  }
-}
+ */

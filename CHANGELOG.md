@@ -87,3 +87,6 @@
 
 ## 0.3.5
 * add context to item builder
+
+## 0.3.6
+* fix refresh

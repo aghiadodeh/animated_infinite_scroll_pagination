@@ -70,6 +70,7 @@ mixin PaginationViewModel<T extends Object> {
 
   /// refresh items-list, reload items from first page.
   void refresh() {
+    clear();
     paginationParams.refresh();
   }
 
