@@ -1,64 +1,56 @@
 import 'dart:io';
-
-import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
 import 'package:example/models/user.dart';
 import 'package:example/ui/widgets/user_card.dart';
-import 'package:example/viewmodels/users_viewmodel.dart';
+import 'package:example/ui/controllers/users_pagination_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class UsersListView extends StatefulWidget {
-  const UsersListView({Key? key}) : super(key: key);
+  const UsersListView({super.key});
 
   @override
   State<UsersListView> createState() => _UsersListViewState();
 }
 
 class _UsersListViewState extends State<UsersListView> {
-  final viewModel = UsersViewModel();
+  final controller = UsersPaginationController();
 
   @override
   void initState() {
     super.initState();
-    viewModel
-      ..listen() // observe data-list changes when repository update the list
-      ..getPaginationList(); // fetch first chunk of data from server
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
+    controller.fetchNewChunk(); // fetch first chunk of data from server
   }
 
   deleteUser(User user) {
-    viewModel.remove(user);
+    controller.remove(user);
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedInfiniteScrollView<User>(
-      viewModel: viewModel,
-      loadingWidget: const Center(
-        child: SizedBox(
-          width: 50,
-          height: 50,
-          child: AppProgressBar(),
+      delegate: controller,
+      options: AnimatedInfinitePaginationOptions(
+        // customize your loading widget
+        loadingWidget: const Center(
+          child: SizedBox(
+            width: 50,
+            height: 50,
+            child: AppProgressBar(),
+          ),
         ),
+        // customize your pagination loading widget
+        footerLoadingWidget: const AppProgressBar(),
+        // customize your error widget
+        errorWidget: const Text("Pagination Error"),
+        itemBuilder: (context, item, index) => UserCard(user: item, onDelete: deleteUser),
+        refreshIndicator: true,
       ),
-      // customize your loading widget
-      footerLoadingWidget: const AppProgressBar(),
-      // customize your pagination loading widget
-      errorWidget: const Text("Pagination Error"),
-      // customize your error widget
-      itemBuilder: (context, index, item) => UserCard(user: item, onDelete: deleteUser),
-      refreshIndicator: true,
     );
   }
 }
 
 class AppProgressBar extends StatelessWidget {
-  const AppProgressBar({Key? key}) : super(key: key);
+  const AppProgressBar({super.key});
 
   @override
   Widget build(BuildContext context) {
