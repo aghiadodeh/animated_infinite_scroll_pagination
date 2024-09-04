@@ -43,14 +43,14 @@ mixin AnimatedInfinitePaginationController<T> {
 
   /// emit new [PaginationState] to reflect it in UI.
   void emitState(PaginationState<T> state) {
-    // update state value
-    paginationState.postValue(state);
-
     // handle new data
     if (state is PaginationSuccessState) {
       final response = (state as PaginationSuccessState<T>);
       _appendData(response.data);
     }
+
+    // update state value
+    paginationState.postValue(state);
   }
 
   /// fetch new items list.

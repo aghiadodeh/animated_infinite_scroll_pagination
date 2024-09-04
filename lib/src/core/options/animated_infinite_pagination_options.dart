@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
+import '../../models/custom_widget/sliver_custom_widget.dart';
 import '../../models/pagination.model/pagination_model.dart';
 import '../../types/types.dart';
 
 class AnimatedInfinitePaginationOptions<T> {
-  /// ScrollPhysics of scrollView.
-  final ScrollPhysics? physics;
-
-  /// Whether the extent of the scroll view in the [scrollDirection] should be
-  /// determined by the contents being viewed.
-  final bool shrinkWrap;
-
-  final bool reverse;
-
   /// builder of each item in list.
+  /// width of [itemBuilder] is required when [gridDelegate] == null and [scrollDirection] == [Axis.horizontal]
   final AnimatedInfiniteItemBuilder<T>? itemBuilder;
 
-  /// pass [topWidget] when you want to place a widget at the top of the first [itemBuilder] widget.
-  final Widget? topWidget;
+  /// pass [topWidgets] when you want to place a widget at the top of the first [itemBuilder] widget.
+  final List<SliverCustomWidget>? topWidgets;
 
   /// [loadingWidget] is a widget appears when first page is in loading state.
   final Widget? loadingWidget;
@@ -38,16 +31,14 @@ class AnimatedInfinitePaginationOptions<T> {
   final Function()? onRefresh;
 
   /// Scroll Direction default value is [Axis.vertical]
+  /// width of [itemBuilder] is required when [gridDelegate] == null and [scrollDirection] == [Axis.horizontal]
   final Axis scrollDirection;
 
   /// A delegate that controls the layout of the children within the [GridView].
   final SliverGridDelegate? gridDelegate;
 
-  /// Custom [Widget] inside [AnimatedPaginationScrollView]
-  final Widget Function(BuildContext context, List<PaginationModel<T>>)? child;
-
-  /// scroll-view padding
-  final EdgeInsets? padding;
+  /// Custom Sliver [Widget] inside [AnimatedPaginationScrollView]
+  final Widget Function(BuildContext context, List<PaginationModel<T>>)? customSliverChild;
 
   /// Whether to spawn a new isolate on which to calculate the diff on.
   ///
@@ -57,11 +48,8 @@ class AnimatedInfinitePaginationOptions<T> {
   final bool? spawnIsolate;
 
   const AnimatedInfinitePaginationOptions({
-    this.physics,
     this.itemBuilder,
-    this.reverse = false,
-    this.shrinkWrap = false,
-    this.topWidget,
+    this.topWidgets,
     this.loadingWidget,
     this.errorWidget,
     this.footerLoadingWidget,
@@ -70,8 +58,7 @@ class AnimatedInfinitePaginationOptions<T> {
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.gridDelegate,
-    this.child,
-    this.padding,
+    this.customSliverChild,
     this.spawnIsolate,
   });
 }
