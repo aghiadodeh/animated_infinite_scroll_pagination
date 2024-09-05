@@ -25,7 +25,7 @@ class UsersPaginationController with AnimatedInfinitePaginationController<User> 
       // this will stop loading more data when last data-chunk is loaded.
       if (data?.total != null && data?.users != null) {
         // emit fetched data
-        emitState(PaginationSuccessState(data!.users!));
+        emitState(PaginationSuccessState(data!.users!, cached: false));
         setTotal(data.total!);
       }
     } catch (error) {
