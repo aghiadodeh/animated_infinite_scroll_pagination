@@ -40,6 +40,9 @@ class UserRepository {
 Now we're going to create our **PaginationController**.
 The PaginationController will be something like this:
 ```dart
+import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
+import '../../models/data/user.dart';
+
 class UsersPaginationController with AnimatedInfinitePaginationController<User> {
   final repository = UserRepository();
 
@@ -49,7 +52,7 @@ class UsersPaginationController with AnimatedInfinitePaginationController<User> 
     return a.id == b.id;
   }
 
-  /// fetch data from repository and emit by Stream to pagination-list
+  /// fetch data from repository and emit new state
   ///
   /// set total items count -> stop loading on last page
   /// 
@@ -62,12 +65,12 @@ class UsersPaginationController with AnimatedInfinitePaginationController<User> 
     try {
       // fetch data from server
       final data = await repository.getUsersList(page);
-
-      // tell the controller the total of items,
-      // this will stop loading more data when last data-chunk is loaded.
       if (data?.total != null && data?.users != null) {
         // emit fetched data
-        emitState(PaginationSuccessState(data!.users!));
+        emitState(PaginationSuccessState(data!.users!, cached: false));
+
+        // tell the controller the total of items,
+        // this will stop loading more data when last data-chunk is loaded.
         setTotal(data.total!);
       }
     } catch (error) {
@@ -162,7 +165,8 @@ Widget build(BuildContext context) {
 }
 ```
 
-* enable pagination in gridView:
+### GridView
+* enable pagination in **GridView**:
 ```dart
 @override
 Widget build(BuildContext context) {
@@ -189,7 +193,8 @@ Widget build(BuildContext context) {
 }
 ```
 
-* enable pagination in horizontal scroll:
+### Scroll Direction:
+* enable pagination in **horizontal** scroll:
 ```dart
 @override
 Widget build(BuildContext context) {
@@ -213,7 +218,8 @@ Widget build(BuildContext context) {
 }
 ```
 
-* add top widgets above the scrollView:
+### Top Widgets:
+* add **top widgets** above the scrollView:
 ```dart
 @override
 Widget build(BuildContext context) {
@@ -266,16 +272,3 @@ Widget build(BuildContext context) {
   );
 }
 ```
-
-## **AnimatedInfiniteScrollView** Parameters:
-* **viewModel**: The View-Model you declared above in this example *(required)*.
-* **topWidget**: a widget you want to place at the top of the first **itemBuilder** widget *(optional)*.
-* **loadingWidget**: a widget you want to display when first page is loading *(optional)*.
-* **footerLoadingWidget**: a widget you want to display when pagination data is loading *(optional)*.
-* **errorWidget**: a widget you want to display when pagination data  is field loading (throw exception) *(optional)*.
-* **refreshIndicator**: wrap the scroll view inside a `RefreshIndicator` *(optional)*, **default value** is `false`.
-* **itemBuilder**: a widget function which build your **Data Widget** inside the scroll view on Each **Data Item** from list *(required)*.
-* **onRefresh**: callback called when user swipe refresh to load new list *(optional)*
-* **scrollDirection**: Axis.vertical or Axis.horizontal *(optional)*
-* **gridDelegate**: A delegate that controls the layout of the children within the GridView *(optional)*
-* **noItemsWidget**: a widget appears after fetch first page data and the result is empty *(optional)*
