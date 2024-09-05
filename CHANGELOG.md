@@ -1,3 +1,10 @@
+## 1.0.1
+* update README.md
+
+## 1.0.0
+* working with slivers
+* add PaginationController
+
 ## 0.3.9
 * update `implicitly_animated_reorderable_list_2` version to 0.6.0
 

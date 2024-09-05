@@ -1,6 +1,6 @@
 name: animated_infinite_scroll_pagination
 description: Flutter package loads and displays small parts of the elements when you scroll down on the screen
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/aghiadodeh/animated_infinite_scroll_pagination
 
 topics: 
