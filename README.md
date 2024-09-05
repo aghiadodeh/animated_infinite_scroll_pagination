@@ -7,15 +7,14 @@
 
 ![](https://s10.gifyu.com/images/20220422_002203.gif)
 
-## 1- Declare View-Model extends `PaginationViewModel<T>`
+## 1- Declare a PaginationController extends `AnimatedInfinitePaginationController<T>`
 
-* **PaginationViewModel** the layer between **user interface** and **model** which is handled by a repository.
-* **T** is Type of your data list. for Example if you have  `List<User>` , you will create a **viewModel** extends `PaginationViewModel<User>`.
+* **PaginationController** the layer between **user interface** and **model** which is handled by a repository.
+* **T** is Type of your data list. for Example if you have  `List<User>` , you will create a **paginationController** extends `AnimatedInfinitePaginationController<User>`.
 
-Before create the View-Model we're going to create our **Repository**.
-The Repository is the layer between the View-Model and back-end.
+Before create the PaginationController we're going to create our **Repository** which get the data from backend (data source)
 
-The Repository will be something like this:
+The Repository will be like this:
 ```dart
 import 'dart:async';
 import 'dart:convert';
@@ -31,22 +30,21 @@ class UserRepository {
     final api = "${Env.paginationApi}/users?page=$page&limit=${Env.perPage}";
     final http.Response response = await http.get(Uri.parse(api));
     final responseData = UserResponse.fromJson(jsonDecode(response.body));
+    
     /// responseData.usersList -> json: { "users": [], "total": 100 }
     return responseData.usersList;
   }
 }
 
 ```
-Now we're going to create our **View-Model**.
-The View-Model will be something like this:
+Now we're going to create our **PaginationController**.
+The PaginationController will be something like this:
 ```dart
-class UsersViewModel extends PaginationViewModel<User> {
-  final repository = UserRepository();
-  final _controller = StreamController<PaginationState<List<User>>>();
+import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
+import '../../models/data/user.dart';
 
-  Stream<PaginationState<List<User>>> get result async* {
-    yield* _controller.stream;
-  }
+class UsersPaginationController with AnimatedInfinitePaginationController<User> {
+  final repository = UserRepository();
 
   /// decide whether two object represent the same Item
   @override
@@ -54,39 +52,40 @@ class UsersViewModel extends PaginationViewModel<User> {
     return a.id == b.id;
   }
 
-  /// fetch data from repository and emit by Stream to pagination-list
+  /// fetch data from repository and emit new state
   ///
   /// set total items count -> stop loading on last page
+  /// 
+  /// use [emitState] to reflect new pagination-state to UI
   @override
   Future<void> fetchData(int page) async {
     // emit loading
-    _controller.add(const PaginationLoading());
+    emitState(const PaginationLoadingState());
+
     try {
+      // fetch data from server
       final data = await repository.getUsersList(page);
-      // tell the view-model the total of items.
-      // this will stop loading more data when last data-chunk is loaded
       if (data?.total != null && data?.users != null) {
-        // emit data
-        _controller.add(PaginationSuccess(data!.users!));
+        // emit fetched data
+        emitState(PaginationSuccessState(data!.users!, cached: false));
+
+        // tell the controller the total of items,
+        // this will stop loading more data when last data-chunk is loaded.
         setTotal(data.total!);
       }
-    } catch (_) {
+    } catch (error) {
+      if (kDebugMode) print(error);
       // emit error
-      _controller.add(const PaginationError());
+      emitState(const PaginationErrorState());
     }
   }
 
-  /// subscribe for list changes
-  @override
-  Stream<PaginationState<List<User>>> streamSubscription() => result;
-
   /// remove an item from users list
   void remove(User user) {
-    // `paginationParams` is a variable declared in `PaginationViewModel`
-    // which contains the List<T>
-    final index = paginationParams.itemsList.value.items.indexWhere((element) => element.item.id == user.id);
-    // `deleteItem` is a method declared in `PaginationViewModel`
-    // which expected a integer value `index of item`
+    // find index of user in items list
+    final index = items.value.indexWhere((element) => element.item.id == user.id);
+    // `deleteItem` is a method declared in `AnimatedInfinitePaginationDelegate`
+    // which expected an integer value `index of item`
     if (index != -1) deleteItem(index);
   }
 }
@@ -95,52 +94,181 @@ class UsersViewModel extends PaginationViewModel<User> {
 ## 2- UI:
 * Declare your view-model in your screen:
 ```dart
-final viewModel = UsersViewModel();
+import 'package:flutter/material.dart';
+import '../controllers/users_pagination_controller.dart';
+import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
 
-@override
-void initState() {
-    super.initState();
-    viewModel
-      ..listen() // observe data-list changes when repository update the list
-      ..getPaginationList(); // fetch first chunk of data from server
- }
+class UsersListView extends StatefulWidget {
+  const UsersListView({super.key});
 
-@override
-void dispose() {
-    viewModel.dispose();
-    super.dispose();
+  @override
+  State<UsersListView> createState() => _UsersListViewState();
 }
+
+class _UsersListViewState extends State<UsersListView> {
+  final controller = UsersPaginationController();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchNewChunk(); // fetch first chunk of data from server
+  }
+
+  /// remove user from list
+  void deleteUser(User user) {
+    controller.remove(user);
+  }
+}
+
 ```
 * Wrap the animated scrollView in your screen:
 ```dart
-  deleteUser(User user) {
-  viewModel.remove(user);
-}
-
 @override
 Widget build(BuildContext context) {
   return AnimatedInfiniteScrollView<User>(
-      viewModel: viewModel,
-      loadingWidget: const AppProgressBar(), // customize your loading widget
-      footerLoadingWidget: const AppProgressBar(), // customize your pagination loading widget
-      errorWidget: const Text("Pagination Error"), // customize your error widget
-      itemBuilder: (index, item) => UserCard(user: item, onDelete: deleteUser),
-      refreshIndicator: true,
-      onRefresh: () {
-        // handle swipe refresh event
-      }
+      controller: controller,
+      options: AnimatedInfinitePaginationOptions(
+          // customize your loading widget
+          loadingWidget: const Center(child: AppProgressBar()),
+
+          // customize your pagination loading widget
+          footerLoadingWidget: const AppProgressBar(),
+          
+          // customize your error widget
+          errorWidget: TextButton(
+            onPressed: controller.fetchNewChunk, // re-fetch data
+            child: Text(
+              "Fetching data failed, Try Again",
+              style: TextStyle(fontSize: 18, color: Theme.of(context).primaryColor),
+            ),
+          ),
+
+          // appears after fetch first page data and the result is empty
+          noItemsWidget: Center(
+            child: Text("No Data Found"),
+          ),
+          
+          // item widget builder
+          itemBuilder: (BuildContext context, User item, int index) {
+            return UserCard(user: item, onDelete: deleteUser);
+          },
+          
+          /// warp [ScrollView] in [RefreshIndicator] 
+          refreshIndicator: true,
+
+          // handle swipe refresh event
+          onRefresh: () {
+            // ...
+          }
+      ),
   );
 }
 ```
-## **AnimatedInfiniteScrollView** Parameters:
-* **viewModel**: The View-Model you declared above in this example *(required)*.
-* **topWidget**: a widget you want to place at the top of the first **itemBuilder** widget *(optional)*.
-* **loadingWidget**: a widget you want to display when first page is loading *(optional)*.
-* **footerLoadingWidget**: a widget you want to display when pagination data is loading *(optional)*.
-* **errorWidget**: a widget you want to display when pagination data  is field loading (throw exception) *(optional)*.
-* **refreshIndicator**: wrap the scroll view inside a `RefreshIndicator` *(optional)*, **default value** is `false`.
-* **itemBuilder**: a widget function which build your **Data Widget** inside the scroll view on Each **Data Item** from list *(required)*.
-* **onRefresh**: callback called when user swipe refresh to load new list *(optional)*
-* **scrollDirection**: Axis.vertical or Axis.horizontal *(optional)*
-* **gridDelegate**: A delegate that controls the layout of the children within the GridView *(optional)*
-* **noItemsWidget**: a widget appears after fetch first page data and the result is empty *(optional)*
+
+### GridView
+* enable pagination in **GridView**:
+```dart
+@override
+Widget build(BuildContext context) {
+  final size = MediaQuery.of(context).size;
+
+  return AnimatedInfiniteScrollView<User>(
+      controller: controller,
+      options: AnimatedInfinitePaginationOptions(
+          // add gridDelegate to display this pagination list in GridView
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+          ),
+
+          // item widget builder
+          itemBuilder: (BuildContext context, User item, int index) {
+            return UserCard(user: item, onDelete: deleteUser);
+          },
+
+          // ...
+      ),
+  );
+}
+```
+
+### Scroll Direction:
+* enable pagination in **horizontal** scroll:
+```dart
+@override
+Widget build(BuildContext context) {
+  final size = MediaQuery.of(context).size;
+
+  return AnimatedInfiniteScrollView<User>(
+      controller: controller,
+      options: AnimatedInfinitePaginationOptions(
+          // set scrollDirection
+          scrollDirection: Axis.horizontal,
+
+          // width of child is required when (scrollDirection = Axis.horizontal)
+          itemBuilder: (context, item, index) => SizedBox(
+            width: size.width * 0.8,
+            child: UserCard(user: item, onDelete: deleteUser),
+          ),
+
+          // ...
+      ),
+  );
+}
+```
+
+### Top Widgets:
+* add **top widgets** above the scrollView:
+```dart
+@override
+Widget build(BuildContext context) {
+  final size = MediaQuery.of(context).size;
+
+  return AnimatedInfiniteScrollView<User>(
+      controller: controller,
+      options: AnimatedInfinitePaginationOptions(
+          // [SliverCustomWidget] imported automatically from "animated_infinite_scroll_pagination"
+          topWidgets: [
+            // non sliver widget
+            SliverCustomWidget(
+              isSliver: false,
+              child: Container(
+                color: Colors.blue,
+                height: size.height / 6,
+                child: const Center(
+                  child: Text(
+                    "Animated Pagination List",
+                    style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold,),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+
+            // sliver widget
+            SliverCustomWidget(
+              child: const SliverAppBar(
+                /// Properties of app bar
+                backgroundColor: Colors.white,
+                floating: false,
+                pinned: true,
+                expandedHeight: 100.0,
+
+                /// Properties of the App Bar when it is expanded
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(
+                    "SliverList Widget",
+                    style: TextStyle(color: Colors.black87, fontSize: 20.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+          ],
+
+          // ...
+      ),
+  );
+}
+```
