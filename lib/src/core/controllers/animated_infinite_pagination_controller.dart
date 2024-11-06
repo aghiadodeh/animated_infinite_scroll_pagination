@@ -43,14 +43,14 @@ mixin AnimatedInfinitePaginationController<T> {
 
   /// emit new [PaginationState] to reflect it in UI.
   void emitState(PaginationState<T> state) {
+    // update state value
+    paginationState.postValue(state);
+
     // handle new data
     if (state is PaginationSuccessState) {
       final response = (state as PaginationSuccessState<T>);
       _appendData(response.data);
     }
-
-    // update state value
-    paginationState.postValue(state);
   }
 
   /// fetch new items list.
@@ -103,7 +103,7 @@ mixin AnimatedInfinitePaginationController<T> {
     refreshing = true;
   }
 
-  /// insert new item to list
+  /// insert new [item] to list in specific [index]
   void insertItem(int index, T item) {
     try {
       final currentItems = items.value.toList();
@@ -115,7 +115,16 @@ mixin AnimatedInfinitePaginationController<T> {
     }
   }
 
-  /// remove item from list
+  /// update existing [item]
+  void updateItem(T item, {required bool Function(T item) findIndex}) {
+    final list = items.value.toList();
+    final index = list.indexWhere((e) => findIndex(e.item));
+    if (index == -1) return;
+    deleteItem(index);
+    insertItem(index, item);
+  }
+
+  /// remove item by [index] from [items]
   void deleteItem(int index) {
     final currentItems = items.value.toList();
     currentItems.removeAt(index);

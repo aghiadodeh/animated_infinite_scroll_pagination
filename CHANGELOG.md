@@ -1,3 +1,9 @@
+## 1.0.3
+* add `updateItem` method
+
+## 1.0.2
+* fix cached State
+
 ## 1.0.1
 * update README.md
 

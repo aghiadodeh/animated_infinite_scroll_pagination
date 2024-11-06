@@ -67,6 +67,8 @@ class UsersPaginationController with AnimatedInfinitePaginationController<User> 
       final data = await repository.getUsersList(page);
       if (data?.total != null && data?.users != null) {
         // emit fetched data
+        // when emit remote data after cached data with same page,
+        // controller will replace the cached data with remote data
         emitState(PaginationSuccessState(data!.users!, cached: false));
 
         // tell the controller the total of items,
