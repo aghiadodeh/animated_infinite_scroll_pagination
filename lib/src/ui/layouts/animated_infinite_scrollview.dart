@@ -58,7 +58,7 @@ class AnimatedInfiniteScrollViewState<T> extends State<AnimatedInfiniteScrollVie
       final total = controller.total;
       final paginationState = controller.paginationState.value;
 
-      if (!(page > 1 && total == 0) && paginationState.state != PaginationStateEnum.loading) {
+      if (!(page > 1 && total == 0) && paginationState.state != PaginationStateEnum.loading && paginationState.state != PaginationStateEnum.error) {
         // request new chunk of data
         controller.fetchNewChunk();
       }
@@ -125,7 +125,12 @@ class AnimatedInfiniteScrollViewState<T> extends State<AnimatedInfiniteScrollVie
         /// fill viewPort
         CustomScrollView(
           controller: scrollController,
-          scrollDirection: widget.options.scrollDirection,
+          scrollDirection: options.scrollDirection,
+          scrollBehavior: options.scrollBehavior,
+          clipBehavior: options.clipBehavior,
+          cacheExtent: options.cacheExtent,
+          reverse: options.reverse,
+          physics: options.physics,
           slivers: [
             /// top widget
             if (topWidgets != null)
@@ -144,16 +149,22 @@ class AnimatedInfiniteScrollViewState<T> extends State<AnimatedInfiniteScrollVie
 
             /// gridView
             if (options.itemBuilder != null && options.gridDelegate != null)
-              AnimatedInfiniteGridView(
-                controller: widget.controller,
-                options: widget.options,
+              SliverPadding(
+                padding: options.padding,
+                sliver: AnimatedInfiniteGridView(
+                  controller: widget.controller,
+                  options: widget.options,
+                ),
               ),
 
             /// listView
             if (options.itemBuilder != null && options.gridDelegate == null)
-              AnimatedInfiniteListView(
-                controller: widget.controller,
-                options: widget.options,
+              SliverPadding(
+                padding: options.padding,
+                sliver: AnimatedInfiniteListView(
+                  controller: widget.controller,
+                  options: widget.options,
+                ),
               ),
 
             /// footer

@@ -24,29 +24,30 @@ class AnimatedInfinitePaginationFooterWidget<T> extends StatelessWidget {
         if (items.isNotEmpty) {
           // loading widget
           if (paginationState.state == PaginationStateEnum.loading) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: CustomAnimatedOpacityWidget(
-                    child: options.footerLoadingWidget ?? CircularProgressIndicator.adaptive(),
-                  ),
-                ),
-              ],
-            );
-          } else if (paginationState.state == PaginationStateEnum.error) {
+            return options.footerLoadingWidget ??
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: CustomAnimatedOpacityWidget(
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    ),
+                  ],
+                );
+          } else if (paginationState.state == PaginationStateEnum.error && controller.page != 1) {
             // error widget
-            return CustomAnimatedOpacityWidget(
-              child: options.errorWidget ??
-                  TextButton(
+            return options.errorWidget ??
+                CustomAnimatedOpacityWidget(
+                  child: TextButton(
                     onPressed: controller.fetchNewChunk,
                     child: Text(
                       "Error, Try Again",
                       style: TextStyle(fontSize: 18, color: Theme.of(context).primaryColor),
                     ),
                   ),
-            );
+                );
           }
         }
         return SizedBox(height: controller.lastPage ? 0 : 100);

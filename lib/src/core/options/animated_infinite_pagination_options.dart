@@ -1,3 +1,4 @@
+import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
 import 'package:flutter/material.dart';
 import '../../models/custom_widget/sliver_custom_widget.dart';
 import '../../models/pagination.model/pagination_model.dart';
@@ -14,10 +15,10 @@ class AnimatedInfinitePaginationOptions<T> {
   /// [loadingWidget] is a widget appears when first page is in loading state.
   final Widget? loadingWidget;
 
-  /// [errorWidget] is a widget appears in the bottom of the scrollView when an exception thrown in [viewModel].
+  /// [errorWidget] is a widget appears in the bottom of the scrollView when an exception thrown in pagingController.
   final Widget? errorWidget;
 
-  /// [footerLoadingWidget] is a widget appears when user scroll to bottom of the [AnimatedPaginationScrollView]
+  /// [footerLoadingWidget] is a widget appears when user scroll to bottom of the [AnimatedInfiniteScrollView]
   /// and the nextPage data is in loading state.
   final Widget? footerLoadingWidget;
 
@@ -37,7 +38,7 @@ class AnimatedInfinitePaginationOptions<T> {
   /// A delegate that controls the layout of the children within the [GridView].
   final SliverGridDelegate? gridDelegate;
 
-  /// Custom Sliver [Widget] inside [AnimatedPaginationScrollView]
+  /// Custom Sliver [Widget] inside [AnimatedInfiniteScrollView]
   final Widget Function(BuildContext context, List<PaginationModel<T>>)? customSliverChild;
 
   /// Whether to spawn a new isolate on which to calculate the diff on.
@@ -46,6 +47,34 @@ class AnimatedInfinitePaginationOptions<T> {
   /// use its own metrics to decide, whether a new isolate has to be spawned or not for
   /// optimal performance.
   final bool? spawnIsolate;
+
+  /// {@macro flutter.rendering.RenderViewportBase.cacheExtent}
+  final double? cacheExtent;
+
+  /// {@macro flutter.material.Material.clipBehavior}
+  ///
+  /// Defaults to [Clip.hardEdge].
+  final Clip clipBehavior;
+
+  /// How the scroll view should respond to user input.
+  /// If an explicit [ScrollBehavior] is provided to [scrollBehavior], the
+  /// [ScrollPhysics] provided by that behavior will take precedence after
+  /// [physics].
+  final ScrollPhysics? physics;
+
+  /// {@macro flutter.widgets.shadow.scrollBehavior}
+  ///
+  /// [ScrollBehavior]s also provide [ScrollPhysics]. If an explicit
+  /// [ScrollPhysics] is provided in [physics], it will take precedence,
+  /// followed by [scrollBehavior], and then the inherited ancestor
+  /// [ScrollBehavior].
+  final ScrollBehavior? scrollBehavior;
+
+  /// Whether the scroll view scrolls in the reading direction.
+  final bool reverse;
+
+  /// [AnimatedInfiniteScrollView] padding
+  final EdgeInsets padding;
 
   const AnimatedInfinitePaginationOptions({
     this.itemBuilder,
@@ -60,5 +89,11 @@ class AnimatedInfinitePaginationOptions<T> {
     this.gridDelegate,
     this.customSliverChild,
     this.spawnIsolate,
+    this.cacheExtent,
+    this.physics,
+    this.scrollBehavior,
+    this.clipBehavior = Clip.hardEdge,
+    this.reverse = false,
+    this.padding = EdgeInsets.zero,
   });
 }

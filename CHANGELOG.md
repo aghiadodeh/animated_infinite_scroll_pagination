@@ -1,3 +1,15 @@
+## 1.0.7
+* fix fetching data on error
+
+## 1.0.6
+* fix custom footer loader
+
+## 1.0.5
+* fix display error
+
+## 1.0.4
+* improvements
+
 ## 1.0.3
 * add `updateItem` method
 
