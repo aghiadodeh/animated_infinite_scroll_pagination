@@ -1,4 +1,5 @@
-import 'package:animated_infinite_scroll_pagination/animated_infinite_scroll_pagination.dart';
+import 'package:animated_infinite_scroll_pagination/src/models/response_state/response_state.dart';
+import 'package:animated_infinite_scroll_pagination/src/ui/layouts/animated_infinite_scrollview.dart';
 import 'package:flutter/material.dart';
 import '../../models/custom_widget/sliver_custom_widget.dart';
 import '../../models/pagination.model/pagination_model.dart';
@@ -76,6 +77,12 @@ class AnimatedInfinitePaginationOptions<T> {
   /// [AnimatedInfiniteScrollView] padding
   final EdgeInsets padding;
 
+  /// [AnimatedInfiniteScrollView] always scroll by [scrollOffset]
+  /// when paging state is [PaginationLoadingState] is [PaginationStateEnum.loading] or [PaginationStateEnum.error],
+  ///
+  /// which will make [footerLoadingWidget] appearing, you can set [scrollOffset] as [footerLoadingWidget] size
+  final double scrollOffset;
+
   const AnimatedInfinitePaginationOptions({
     this.itemBuilder,
     this.topWidgets,
@@ -95,5 +102,6 @@ class AnimatedInfinitePaginationOptions<T> {
     this.clipBehavior = Clip.hardEdge,
     this.reverse = false,
     this.padding = EdgeInsets.zero,
+    this.scrollOffset = 100,
   });
 }

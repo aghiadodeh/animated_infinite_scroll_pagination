@@ -1,3 +1,9 @@
+## 1.0.9
+* add `scrollOffset` property
+
+## 1.0.8
+* improvements
+
 ## 1.0.7
 * fix fetching data on error
 

@@ -27,8 +27,8 @@ class AnimatedInfiniteScrollView<T> extends StatefulWidget {
 }
 
 class AnimatedInfiniteScrollViewState<T> extends State<AnimatedInfiniteScrollView<T>> with ObserverMixin {
-  final scrollController = ScrollController();
-  final refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  late final scrollController = ScrollController();
+  late final refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class AnimatedInfiniteScrollViewState<T> extends State<AnimatedInfiniteScrollVie
   }
 
   /// listen on infinite scroll
-  void observeScrollOffset() {
+  Future<void> observeScrollOffset() async {
     final currentOffset = scrollController.offset;
     final maxOffset = scrollController.position.maxScrollExtent;
 
@@ -60,7 +60,7 @@ class AnimatedInfiniteScrollViewState<T> extends State<AnimatedInfiniteScrollVie
 
       if (!(page > 1 && total == 0) && paginationState.state != PaginationStateEnum.loading && paginationState.state != PaginationStateEnum.error) {
         // request new chunk of data
-        controller.fetchNewChunk();
+        await controller.fetchNewChunk();
       }
     }
   }
@@ -78,7 +78,7 @@ class AnimatedInfiniteScrollViewState<T> extends State<AnimatedInfiniteScrollVie
       if (scrollController.hasClients && items.isNotEmpty && !controller.refreshing) {
         Future.delayed(
           const Duration(milliseconds: 100),
-          scrollBottom,
+          () => scrollBy(offset: widget.options.scrollOffset),
         );
       }
     } else if (scrollController.hasClients && paginationState is PaginationSuccessState && controller.lastPage) {
@@ -89,17 +89,17 @@ class AnimatedInfiniteScrollViewState<T> extends State<AnimatedInfiniteScrollVie
     }
   }
 
-  void scrollBottom() {
-    scrollController.animateTo(
+  Future<void> scrollBottom() async {
+    await scrollController.animateTo(
       scrollController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 250),
       curve: Curves.easeInOut,
     );
   }
 
-  void scrollBy({int offset = 100}) {
+  Future<void> scrollBy({double offset = 100}) async {
     try {
-      scrollController.animateTo(
+      await scrollController.animateTo(
         scrollController.offset + offset,
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
